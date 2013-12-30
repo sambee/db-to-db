@@ -44,7 +44,7 @@ public abstract class BaseSql {
 		return new String(os.toByteArray());
 		}
 		catch(IOException e){
-			throw new ParaseException("Can sql find " + commandId);
+			throw new ParaseException("Can not find sql " + commandId);
 		}
 	}
 	
