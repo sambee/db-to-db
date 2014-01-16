@@ -13,22 +13,20 @@ import flexjson.*;
 
 public class JdbcConverter {
 
-	public static ArrayList ResultSetToList(ResultSet rs) throws Exception {
+	public static ArrayList<Map<String,Object>> resultSetToList(ResultSet rs) throws Exception {
 		ResultSetMetaData md = rs.getMetaData();
 		int columnCount = md.getColumnCount();
-		ArrayList list = new ArrayList();
-		Map rowData;
+		ArrayList<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
+		Map<String,Object> rowData;
 		
 		while (rs.next()) {
-			rowData = new HashMap(columnCount);
+			rowData = new HashMap<String,Object>(columnCount);
 			for (int i = 1; i <= columnCount; i++) {
 				Object v = rs.getObject(i);
 
-				if (v != null
-						&& (v.getClass() == Date.class || v.getClass() == java.sql.Date.class)) {
+				if (v != null && (v.getClass() == Date.class || v.getClass() == java.sql.Date.class)) {
 					Timestamp ts = rs.getTimestamp(i);
 					v = new java.util.Date(ts.getTime());
-					// v = ts;
 				} else if (v != null && v.getClass() == Clob.class) {
 					v = clob2String((Clob) v);
 				}

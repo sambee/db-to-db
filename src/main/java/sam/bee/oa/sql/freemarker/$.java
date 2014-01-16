@@ -7,13 +7,13 @@ import freemarker.template.TemplateModelException;
 
 public class $ implements TemplateMethodModel{
 
-	List<Object> args;
-	public $(List<Object> args){
-		this.args = args;
+	List<Object> list;
+	public $(List<Object> list){
+		this.list = list;
 		
 	}
 	public Object exec(List arguments) throws TemplateModelException {
-		args.add(arguments.get(0));
+		list.add(arguments.get(0));
 		return "?";
 	}
 

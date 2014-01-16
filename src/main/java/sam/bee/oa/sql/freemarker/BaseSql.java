@@ -36,15 +36,16 @@ public abstract class BaseSql {
          return writer.toString();  
 	}
 	
-	protected String getSqlTemplate(String commandId) throws ParaseException{
+	protected String getSqlTemplate(String commandId) throws ParaseException{		 
 		try{
-		InputStream is = BaseSql.class.getResourceAsStream(commandId);
+		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(commandId);
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		IOUtils.copyAndClose(is, os);
 		return new String(os.toByteArray());
 		}
 		catch(IOException e){
-			throw new ParaseException("Can not find sql " + commandId);
+			String path = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+			throw new ParaseException("Can not find sql " + path + commandId);
 		}
 	}
 	
