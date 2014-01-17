@@ -17,8 +17,11 @@ import static java.lang.System.out;
 public class GetMetas extends BaseService implements MethodExecutor {
 
 	String tableName;
-	public GetMetas(String tableName){
-		this.tableName = tableName;		
+	String type;
+	
+	public GetMetas(String type,String tableName){
+		this.tableName = tableName;	
+		this.type = type;
 	}
 
 	@Override

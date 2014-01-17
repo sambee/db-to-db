@@ -19,7 +19,15 @@ public class ExportTable extends BaseService implements MethodExecutor{
 	boolean isCopyData;
 	String tableName;
 		
-	public ExportTable(String type, String tableName, String fields,  boolean isCreateTable, boolean isDropTableIfExist, boolean isCopyData){
+	public ExportTable(
+			String type, 
+			String tableName, 
+			String fields,  
+			boolean isCreateTable, 
+			boolean isDropTableIfExist, 
+			boolean isCopyData
+			
+			){
 		this.type = type;
 		this.tableName = tableName;
 		this.isCreateTable = isCreateTable;
@@ -34,8 +42,16 @@ public class ExportTable extends BaseService implements MethodExecutor{
 		BaseDatabase db = DatabaseFactory.getDatabase("h2");
 		DatabaseService service = (DatabaseService)ServiceFactory.getService(DatabaseService.class);
 		GeneralScriptService gen = (GeneralScriptService)ServiceFactory.getService(GeneralScriptService.class);
+		
+		
+		if(isDropTableIfExist){
+			String sql = gen.dropTable(type, tableName);
+			db.update(sql);
+		}
+		
 		if(isCreateTable){			
-			String sql = gen.createTable(tableName, service.getMetas(tableName));
+			String sql = gen.createTable(type, tableName, service.getMetas(type, tableName));
+			System.out.print(sql);
 			db.update(sql);	
 		}
 		

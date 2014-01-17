@@ -13,9 +13,6 @@ public class BaseDatabase {
 	private static Logger logger = Logger.getLogger(BaseDatabase.class);
 	
 	private Connection conn = null;
-	private Statement stmt = null;
-	private ResultSet rs = null;
-	private PreparedStatement ps =null;
 
 
 	public BaseDatabase(){
@@ -27,7 +24,10 @@ public class BaseDatabase {
 	}
 	
 	public boolean update(String sql)throws SQLException {
-		return stmt.execute(sql);
+		Statement stmt = conn.createStatement();
+		boolean ret = stmt.execute(sql);
+		closeStatement(stmt);
+		return ret;
 	}
 
 	public synchronized ResultSet getResultSet(String sql) throws SQLException {
@@ -35,30 +35,14 @@ public class BaseDatabase {
 	}
 			
 	public synchronized ResultSet getResultSet(String sql, Object[] args) throws SQLException {
+		Statement stmt = conn.createStatement();
 		if(args==null || args.length==0){
 			stmt.executeQuery(sql);
 		}
 		return stmt.executeQuery(sql); 
 	}
 
-	public Connection getConn() {
-		return conn;
-	}
-
-	public Connection setConn(Connection conn) throws SQLException {
-		this.conn = conn;
-	    stmt = conn.createStatement();
-	    return conn;
-	}
-	
-	public synchronized void closeCon() {
-		if (rs != null) {
-			try {
-				rs.close();			
-			} catch (Exception e) {
-				e.printStackTrace();
-			}			
-		}
+	public void closeStatement(Statement stmt) throws SQLException{
 		if (stmt != null) {
 			try {
 				stmt.close();
@@ -66,12 +50,25 @@ public class BaseDatabase {
 				e.printStackTrace();
 			}
 		}
-		if (conn != null){
-			try {
+	}
+	
+	public Connection getConn() {
+		return conn;
+	}
+
+	public Connection setConn(Connection conn)  {
+		this.conn = conn;	    
+	    return conn;
+	}
+	
+	public synchronized void closeCon(){
+		try {
+		if (conn != null && !conn.isClosed()){			
 				conn.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		
+		}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	

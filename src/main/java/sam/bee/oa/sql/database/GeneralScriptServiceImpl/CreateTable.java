@@ -18,8 +18,9 @@ public class CreateTable extends BaseService implements MethodExecutor {
 
 	String talbeName;
 	List<Map<String, Object>> metas;
-	
-	public CreateTable(String talbeName, List<Map<String, Object>> metas){
+	String type;
+	public CreateTable(String type, String talbeName, List<Map<String, Object>> metas){
+		this.type = type;
 		this.talbeName = talbeName;
 		this.metas = metas;
 	}
@@ -32,10 +33,10 @@ public class CreateTable extends BaseService implements MethodExecutor {
 		Map<String, Object> myParams = new HashMap<String, Object>();
 		
 		String tableName = "system_users";
-		List<Map<String, Object>> fields = service.getMetas(tableName);
+		List<Map<String, Object>> fields = service.getMetas(type, tableName);
 		List list = new ArrayList();
 		myParams.put("tableName", tableName);
 		myParams.put("fields", fields);
-		return new DefaultSql().convert("create_tables.sql", myParams, list, getClass());
+		return new DefaultSql().convert("create_tables." + type + ".sql", myParams, list, getClass());
 	};
 }

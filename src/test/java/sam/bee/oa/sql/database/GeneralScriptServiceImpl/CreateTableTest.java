@@ -25,7 +25,7 @@ public class CreateTableTest {
 		GeneralScriptService service = (GeneralScriptService)ServiceFactory.getService(GeneralScriptService.class);
 		
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-		String sql  = service.createTable("system_users", list);
+		String sql  = service.createTable("h2","system_users", list);
 		System.out.println(sql);
 	}
 

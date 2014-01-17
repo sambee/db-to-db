@@ -11,7 +11,7 @@ public interface DatabaseService {
 	 * @param tableName
 	 * @return
 	 */
-	List<Map<String, Object>> getMetas(String tableName);
+	List<Map<String, Object>> getMetas(String type, String tableName);
 
 	/**
 	 * 
@@ -20,13 +20,13 @@ public interface DatabaseService {
 	 * @param pageSize
 	 * @return
 	 */
-	List<Map<String, Object>> getPage(Map<String,Object> paraments, int start, int pageSize); 
+	List<Map<String, Object>> getPage(String type, Map<String,Object> paraments, int start, int pageSize); 
 	
 	/**
 	 * Get all tables info.
 	 * @return
 	 */
-	List<Map<String, Object>> getAllTables();
+	List<Map<String, Object>> getAllTables(String type);
 
 	
 	/**
@@ -39,4 +39,5 @@ public interface DatabaseService {
 	 */
 	void exportTable(String type, String table, String fields,  boolean isCreateTable, boolean isDropTableIfExist, boolean isCopyData);
 	
+
 }

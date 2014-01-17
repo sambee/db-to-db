@@ -21,7 +21,7 @@ public class GetAllTablesTest {
 	public void test() {
 		DatabaseService service = (DatabaseService)ServiceFactory.getService(DatabaseService.class);
 		
-		List<Map<String, Object>> list = service.getAllTables();
+		List<Map<String, Object>> list = service.getAllTables("mssql");
 		
 		for(Map<String, Object> m : list){
 			System.out.println(m);
