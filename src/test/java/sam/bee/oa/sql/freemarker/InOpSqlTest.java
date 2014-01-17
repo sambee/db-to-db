@@ -19,7 +19,7 @@ public class InOpSqlTest {
 			root.putAll(map);
 			root.put("$in", new In(args));
 			root.put("$", new $(args));
-			return sql(sql, root);
+			return sql(sql, root, getClass());
 		}
 
 	}

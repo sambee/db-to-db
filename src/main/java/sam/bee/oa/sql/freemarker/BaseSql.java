@@ -15,6 +15,16 @@ import freemarker.template.TemplateException;
 
 public abstract class BaseSql {
 
+	protected String sql(String filename, Map<String,?> params, Class bassClass) throws ParaseException{
+			 String name = bassClass.getPackage().getName().replaceAll("\\.", "/");
+			 return sql(filename, params,  name);		
+	 
+	}
+	
+	protected String sql(String filename, Map<String,?> params, String basePath) throws ParaseException{
+			 return sql(basePath + "/" + filename, params);		 
+	}
+	
 	protected String sql(String filename, Map<String,?> params) throws ParaseException{
 		 try {
 			 return process(filename, params);		

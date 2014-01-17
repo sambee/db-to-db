@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import sam.bee.oa.sql.database.DatabaseFactory;
+import sam.bee.oa.sql.core.DatabaseFactory;
 import sam.bee.oa.sql.database.DatabaseService;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })

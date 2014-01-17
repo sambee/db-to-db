@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import sam.bee.oa.sql.core.MethodExecutor;
 import sam.bee.oa.sql.database.BaseDatabase;
-import sam.bee.oa.sql.database.MethodExecutor;
 import static java.lang.System.out;
 
 public class GetMetas extends BaseDatabase implements MethodExecutor {
@@ -24,21 +24,22 @@ public class GetMetas extends BaseDatabase implements MethodExecutor {
 	@Override
 	public Object execute(Map params) throws Throwable{
 		List list = new ArrayList();
-//		ResultSet rs = getDB().getResultSet("select * from " + tableName);
-//				
-//		ResultSetMetaData rsmd = rs.getMetaData();
-//		
-//		
-//		  for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-//			  String colName = rsmd.getColumnName(i);
-//			  int type = rsmd.getColumnType(i);
-//			  String typeName = rsmd.getColumnTypeName(i);
-//			  int colLen = rsmd.getColumnDisplaySize(i);
-//			  int precision = rsmd.getPrecision(i);
-//			  String schenaName  = rsmd.getSchemaName(i);
-//			  int scale  = rsmd.getScale(i);
-//			  String clsName = rsmd.getColumnClassName(i);
-//			  String tableN = rsmd.getTableName(i);
+		ResultSet rs = getDB().getResultSet("select * from " + tableName);
+				
+		ResultSetMetaData rsmd = rs.getMetaData();
+		
+		
+		  for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+			  String colName = rsmd.getColumnName(i);
+			  int type = rsmd.getColumnType(i);
+			  String typeName = rsmd.getColumnTypeName(i);
+			  int colLen = rsmd.getColumnDisplaySize(i);
+			  int precision = rsmd.getPrecision(i);
+			  String schenaName  = rsmd.getSchemaName(i);
+			  int scale  = rsmd.getScale(i);
+			  String clsName = rsmd.getColumnClassName(i);
+			  String tableN = rsmd.getTableName(i);
+			  int isAllowNull = rsmd.isNullable(i);
 //			  out.print(colName);
 //			  out.print(" " + typeName);
 //			  out.print(" " + colLen);
@@ -48,28 +49,32 @@ public class GetMetas extends BaseDatabase implements MethodExecutor {
 //			  out.print(" " +  tableN);
 //			  
 //			  out.println("");
-//		  }
+			  Map meta = new HashMap();
+			  meta.put("COL_NAME", colName);
+			  meta.put("COL_TYPE", typeName);
+			  meta.put("COL_LEN", colLen);
+			  meta.put("COL_SCALE", scale);
+			  meta.put("COL_CLASS", clsName);
+			  meta.put("COL_NULLABLE", isAllowNull);
+			  list.add(meta);
+		  }
 		
 		DatabaseMetaData dm = getDB().getConn().getMetaData( );
 		
-		getDataBaseInformations(dm);
-		out.println("--------------------------------");
-		getAllTableList(dm, null);
-		out.println("--------------------------------");
-		getAllViewList(dm,null);
-		out.println("--------------------------------");
-		getAllSchemas(dm);
-		out.println("--------------------------------");
-		getAllPrimaryKeys(dm, null, "system_users");
-		out.println("--------------------------------");
-		getAllExportedKeys(dm, null, "system_identities");		
-		out.println("--------------------------------");
-//		ResultSet rs = dm.getExportedKeys(null ,null, tableName );
-//		while( rs.next( ) ) 
-//		{    
-//		  String pkey = rs.getString("PKCOLUMN_NAME");
-//		  System.out.println("primary key = " + pkey);
-//		}
+//		getDataBaseInformations(dm);
+//		out.println("--------------------------------");
+//		getAllTableList(dm, null);
+//		out.println("--------------------------------");
+//		getAllViewList(dm,null);
+//		out.println("--------------------------------");
+//		getAllSchemas(dm);
+//		out.println("--------------------------------");
+//		getAllPrimaryKeys(dm, null, "system_users");
+//		out.println("--------------------------------");
+//		getAllExportedKeys(dm, null, "system_identities");		
+//		out.println("--------------------------------");
+		
+
 		return list;		
 		
 	}

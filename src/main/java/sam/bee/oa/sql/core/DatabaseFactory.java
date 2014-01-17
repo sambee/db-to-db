@@ -1,4 +1,4 @@
-package sam.bee.oa.sql.database;
+package sam.bee.oa.sql.core;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -43,17 +43,17 @@ public class DatabaseFactory {
 @SuppressWarnings({"rawtypes", "unchecked"})
 class ServiceMethodInterceptor implements MethodInterceptor {
 
-	Class cls;
+	Class serviceClass;
 	public ServiceMethodInterceptor(Class cls){
-		this.cls = cls;
+		this.serviceClass = cls;
 	}
 	
 	public Object intercept(Object object, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
-		System.out.println(">>>MethodInterceptor start...");
+		//System.out.println(">>>MethodInterceptor start...");
 		if("toString".equals(method.getName())){
-			return cls.getName();
+			return serviceClass.getName();
 		}
-		String pkg = cls.getName() + "Impl." + toJavaNaming(method.getName());
+		String pkg = serviceClass.getName() + "Impl." + toJavaNaming(method.getName());
 		if(pkg!=null){
 			
 			Class clsObj = Class.forName(pkg);
@@ -63,14 +63,15 @@ class ServiceMethodInterceptor implements MethodInterceptor {
 			}
 			
 
-			Constructor constructor = clsObj.getConstructor(argCls);
+			Constructor constructor = clsObj.getConstructor(method.getParameterTypes());
 			MethodExecutor obj = (MethodExecutor)constructor.newInstance(args);
 			Map params = new HashMap(args.length);
 			params.put("args", args);
+			//System.out.println(">>>MethodInterceptor ending...");
 			return obj.execute(params);		
 		}
 		Object result = methodProxy.invokeSuper(object, args);
-		System.out.println(">>>MethodInterceptor ending...");
+		//System.out.println(">>>MethodInterceptor ending...");
 		return "here";
 	}
 }

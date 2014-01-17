@@ -26,7 +26,7 @@ public class SimpleSqlTest {
 				for(int i=0; i<args.length; i++){
 					params.put("param"+i, "param"+i);
 				}
-				return sql("select_stock.sql", params);
+				return sql("select_stock.sql", params, getClass());
 			}
 			
 		} 

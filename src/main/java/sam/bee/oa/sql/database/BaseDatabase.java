@@ -32,7 +32,7 @@ public abstract class BaseDatabase {
 			root.putAll(paramenters);
 			root.put("$in", new sam.bee.oa.sql.freemarker.In(list));
 			root.put("$", new sam.bee.oa.sql.freemarker.$(list));
-			return sql("sam/bee/oa/sql/database/DatabaseServiceImpl/" + sql, root);
+			return sql(sql, root, getClass());
 		}
 
 	}

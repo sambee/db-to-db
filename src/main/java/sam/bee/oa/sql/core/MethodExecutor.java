@@ -1,4 +1,4 @@
-package sam.bee.oa.sql.database;
+package sam.bee.oa.sql.core;
 
 import java.util.Map;
 

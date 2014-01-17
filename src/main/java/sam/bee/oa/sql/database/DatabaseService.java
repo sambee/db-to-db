@@ -27,6 +27,6 @@ public interface DatabaseService {
 	 * @return
 	 */
 	List<Map<String, Object>> getAllTables();
-	
+
 	
 }
