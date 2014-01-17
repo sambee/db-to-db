@@ -11,7 +11,7 @@ import org.junit.Test;
 import sam.bee.oa.author.AuthProxy;
 import sam.bee.oa.author.TableDAOFactory;
 import sam.bee.oa.author.TableDao;
-import sam.bee.oa.sql.core.DatabaseFactory;
+import sam.bee.oa.sql.core.ServiceFactory;
 import sam.bee.oa.sql.database.DatabaseService;
 
 
@@ -20,7 +20,7 @@ public class GetMetasTest {
 
 	@Test
 	public void test() {
-		DatabaseService service = (DatabaseService)DatabaseFactory.getService(DatabaseService.class);
+		DatabaseService service = (DatabaseService)ServiceFactory.getService(DatabaseService.class);
 		service.getMetas("system_users");
 		
 	}

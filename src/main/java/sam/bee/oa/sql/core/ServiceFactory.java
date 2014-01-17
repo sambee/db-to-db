@@ -12,7 +12,7 @@ import net.sf.cglib.proxy.MethodProxy;
 import static sam.bee.oa.sql.utils.StringUtil.toJavaNaming;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class DatabaseFactory {
+public class ServiceFactory {
 
 	private static LinkedHashMap<Class, Object> services = new LinkedHashMap<Class, Object>();
 	

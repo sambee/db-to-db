@@ -1,85 +1,78 @@
 package sam.bee.oa.sql.database;
 
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.sql.Statement;
 
-import sam.bee.oa.sql.freemarker.BaseSql;
-import sam.bee.oa.sql.freemarker.ParaseException;
-import sam.bee.oa.sql.utils.JdbcConverter;
+import org.apache.log4j.Logger;
 
-
-
-public abstract class BaseDatabase {
-
-
-	private DataBase db = null;
+ 
+public class BaseDatabase {
+	private static Logger logger = Logger.getLogger(BaseDatabase.class);
 	
-	class SQLEntity{
-		public String sql;
-		public List<Object> params;
-	} 
-	
-	class Sql extends BaseSql {
+	private Connection conn = null;
+	private Statement stmt = null;
+	private ResultSet rs = null;
+	private PreparedStatement ps =null;
 
-		public String convert(String sql, Map<String, Object> paramenters, List<Object> list) throws ParaseException {
-			Map<String, Object> root = new HashMap<String, Object>();
-			root.putAll(paramenters);
-			root.put("$in", new sam.bee.oa.sql.freemarker.In(list));
-			root.put("$", new sam.bee.oa.sql.freemarker.$(list));
-			return sql(sql, root, getClass());
-		}
 
+	public BaseDatabase(){
+		
 	}
 	
-	public DataBase getDB() throws SQLException{
-		return new DataBase();
+	public BaseDatabase(Connection conn) throws SQLException{
+		setConn(conn);
 	}
-    
-    protected SQLEntity getSqlEntity(String template, Map params) throws ParaseException{
-    	SQLEntity ety = new SQLEntity();  
-    	LinkedList<Object> list =new LinkedList<Object>();
-    	ety.sql = new Sql().convert(template, params, list);
-    	ety.params = list;
-    	return ety;
-    }
-    
-    private void closeRs(ResultSet rs){
-    	if(rs!=null){
-    	try {
-			rs.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
+	
+	public boolean update(String sql)throws SQLException {
+		return stmt.execute(sql);
+	}
+
+	public synchronized ResultSet getResultSet(String sql) throws SQLException {
+		return getResultSet(sql, null);
+	}
+			
+	public synchronized ResultSet getResultSet(String sql, Object[] args) throws SQLException {
+		if(args==null || args.length==0){
+			stmt.executeQuery(sql);
 		}
-    	}
-    }
-    
-    /**
-     * 
-     * @param templateName
-     * @param params
-     * @return
-     * @throws Exception
-     */
-    public ArrayList<Map<String,Object>> sql(String templateName, Map params) throws Exception{
-    	SQLEntity ety =getSqlEntity(templateName, params);
-    	ResultSet rs = getDB().getResultSet(ety.sql, ety.params.toArray(new Object[ety.params.size()]));
-    	ArrayList<Map<String,Object>> list =null;
-    	try{
-    		list = JdbcConverter.resultSetToList(rs);
-    	}
-    	finally{
-    		closeRs(rs);
-    		
-    	}
-    	return list;
-    }
-  
-    	
-    	
+		return stmt.executeQuery(sql); 
+	}
+
+	public Connection getConn() {
+		return conn;
+	}
+
+	public Connection setConn(Connection conn) throws SQLException {
+		this.conn = conn;
+	    stmt = conn.createStatement();
+	    return conn;
+	}
+	
+	public synchronized void closeCon() {
+		if (rs != null) {
+			try {
+				rs.close();			
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
+		}
+		if (stmt != null) {
+			try {
+				stmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		if (conn != null){
+			try {
+				conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 }

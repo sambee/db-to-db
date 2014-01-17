@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.Map;
 
 import sam.bee.oa.sql.core.MethodExecutor;
-import sam.bee.oa.sql.database.BaseDatabase;
+import sam.bee.oa.sql.database.BaseService;
 import static java.lang.System.out;
 
-public class GetMetas extends BaseDatabase implements MethodExecutor {
+public class GetMetas extends BaseService implements MethodExecutor {
 
 	String tableName;
 	public GetMetas(String tableName){

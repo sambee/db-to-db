@@ -2,7 +2,7 @@ package sam.bee.oa.sql.core;
 
 import java.util.Map;
 
-public interface DatabaseMethod {
+public interface ServiceMethod {
 
 	Object execute(Map<Object,Object> param);
 }

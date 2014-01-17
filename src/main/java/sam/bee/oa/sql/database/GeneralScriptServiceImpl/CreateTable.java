@@ -5,16 +5,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import sam.bee.oa.sql.core.DatabaseFactory;
+import sam.bee.oa.sql.core.ServiceFactory;
 import sam.bee.oa.sql.core.MethodExecutor;
-import sam.bee.oa.sql.database.BaseDatabase;
+import sam.bee.oa.sql.database.BaseService;
 import sam.bee.oa.sql.database.DatabaseService;
 import sam.bee.oa.sql.freemarker.BaseSql;
 import sam.bee.oa.sql.freemarker.DefaultSql;
 import sam.bee.oa.sql.freemarker.ParaseException;
 
 @SuppressWarnings({ "rawtypes" })
-public class CreateTable extends BaseDatabase implements MethodExecutor {
+public class CreateTable extends BaseService implements MethodExecutor {
 
 	String talbeName;
 	List<Map<String, Object>> metas;
@@ -27,7 +27,7 @@ public class CreateTable extends BaseDatabase implements MethodExecutor {
 	@Override
 	public Object execute(Map params) throws Throwable {
 		
-		DatabaseService service = (DatabaseService)DatabaseFactory.getService(DatabaseService.class);
+		DatabaseService service = (DatabaseService)ServiceFactory.getService(DatabaseService.class);
 		
 		Map<String, Object> myParams = new HashMap<String, Object>();
 		

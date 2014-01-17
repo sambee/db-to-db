@@ -1,11 +1,10 @@
 package sam.bee.oa.sql.database;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.Properties;
-import java.util.Date;
 
 import org.apache.log4j.Logger;
 
@@ -13,15 +12,21 @@ import org.apache.log4j.Logger;
 public class DatabaseConnection {
 	
 		private static Logger logger = Logger.getLogger(DatabaseConnection.class);
-		 
+		Properties prop;
+		String type;
+		public DatabaseConnection(String type) throws IOException{
+			InputStream in =Thread.currentThread().getContextClassLoader().getResourceAsStream("jdbc.properties");
+			prop = new Properties();
+			prop.load(in);
+			in.close();
+			this.type = type;
+		}
+		
 		public Connection getConnection() {
 			try {
-				InputStream in =Thread.currentThread().getContextClassLoader().getResourceAsStream("jdbc.properties");
-				Properties pro = new Properties();
-				pro.load(in);
-				in.close();
-				Class.forName(pro.getProperty("src.jdbc.class"));
-				Connection conn = DriverManager.getConnection(new String(pro.getProperty("src.jdbc.url").getBytes("ISO-8859-1"),"gbk"), pro.getProperty("src.jdbc.user"), pro.getProperty("src.jdbc.password"));
+				
+				Class.forName(prop.getProperty(type + ".jdbc.class"));
+				Connection conn = DriverManager.getConnection(getJDBC(), getUser(), getPassword());
 				return conn;
 			} catch (Exception e) {
 				logger.error(e);
@@ -30,4 +35,20 @@ public class DatabaseConnection {
 		}
 		
 	
+	 public String getProperty(String key){
+		 return prop.getProperty(key);
+	 }
+	 
+	 public String getJDBC(){
+		 return prop.getProperty(type + ".jdbc.url");
+	 }
+	 
+	 public String getUser(){
+		 return prop.getProperty(type + ".jdbc.user");
+	 }
+	 
+	 public String getPassword(){
+		 return prop.getProperty(type + ".jdbc.password");
+	 }
+	 
 }

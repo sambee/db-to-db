@@ -5,14 +5,16 @@ import java.util.Map;
 import sam.bee.oa.sql.core.MethodExecutor;
 import sam.bee.oa.sql.database.BaseService;
 
-@SuppressWarnings({ "rawtypes", "unchecked" })
-public class GetAllTables extends BaseService implements MethodExecutor{
+public class GetPage extends BaseService implements MethodExecutor {
+
+	public GetPage(Map<String,Object> paraments, int start, int pageSize){
+		
+	}
 
 	@Override
 	public Object execute(Map params) throws Throwable {
-		return sql("get_all_tables.sql", params);
+		// TODO Auto-generated method stub
+		return null;
 	}
-
-	
 	
 }
