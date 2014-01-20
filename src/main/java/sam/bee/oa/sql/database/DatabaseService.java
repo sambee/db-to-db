@@ -3,6 +3,10 @@ package sam.bee.oa.sql.database;
 import java.util.List;
 import java.util.Map;
 
+import org.h2.mvstore.Page;
+
+import sam.bee.oa.sql.database.model.PageModel;
+
 
 public interface DatabaseService {
 	
@@ -20,7 +24,18 @@ public interface DatabaseService {
 	 * @param pageSize
 	 * @return
 	 */
-	List<Map<String, Object>> getPage(String type, Map<String,Object> paraments, int start, int pageSize); 
+	PageModel getPage(String type, Map<String,Object> paraments, int start, int pageSize); 
+	
+	/**
+	 * 
+	 * @param type
+	 * @param tableName
+	 * @param start
+	 * @param pageSize
+	 * @return
+	 */
+	PageModel getPage(String type, String tableName, int start, int pageSize);
+	
 	
 	/**
 	 * Get all tables info.
@@ -37,7 +52,7 @@ public interface DatabaseService {
 	 * @param isDropTableIfExist
 	 * @param isCopyData
 	 */
-	void exportTable(String type, String table, String fields,  boolean isCreateTable, boolean isDropTableIfExist, boolean isCopyData);
+	void exportTable(String srcType, String descType, String table, String fields,  boolean isCreateTable, boolean isDropTableIfExist, boolean isCopyData) throws Exception;
 	
 
 }

@@ -28,12 +28,12 @@ public abstract class BaseService {
 	
 	class Sql extends BaseSql {
 
-		public String convert(String sql, Map<String, Object> paramenters, List<Object> list) throws ParaseException {
+		public String convert(String sql, Map<String, Object> paramenters, List<Object> list, Class owner) throws ParaseException {
 			Map<String, Object> root = new HashMap<String, Object>();
 			root.putAll(paramenters);
 			root.put("$in", new sam.bee.oa.sql.freemarker.In(list));
 			root.put("$", new sam.bee.oa.sql.freemarker.$(list));
-			return sql(sql, root, getClass());
+			return sql(sql, root, owner);
 		}
 
 	}
@@ -54,10 +54,10 @@ public abstract class BaseService {
 	}
 	
 	
-    protected SQLEntity getSqlEntity(String template, Map params) throws ParaseException{
+    protected SQLEntity getSqlEntity(String template, Map params, Class owner) throws ParaseException{
     	SQLEntity ety = new SQLEntity();  
     	LinkedList<Object> list =new LinkedList<Object>();
-    	ety.sql = new Sql().convert(template, params, list);
+    	ety.sql = new Sql().convert(template, params, list, owner);
     	ety.params = list;
     	return ety;
     }
@@ -79,8 +79,9 @@ public abstract class BaseService {
      * @return
      * @throws Exception
      */
-    public ArrayList<Map<String,Object>> sql(String templateName, Map params) throws Exception{
-    	SQLEntity ety =getSqlEntity(templateName, params);
+    public List<Map<String,Object>> sql(String templateName, Map params, Class owner) throws Exception{
+    	SQLEntity ety =getSqlEntity(templateName, params, owner);
+    	System.out.println(ety.sql);
     	ResultSet rs = getDB().getResultSet(ety.sql, ety.params.toArray(new Object[ety.params.size()]));
     	ArrayList<Map<String,Object>> list =null;
     	try{

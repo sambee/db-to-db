@@ -9,4 +9,8 @@ public interface GeneralScriptService {
 	
 	String createTable(String type, String tableName, List<Map<String, Object>> metas);
 	
+	String createRecord(String type, String talbeName, Map<String, Object> valuesMap, Map<String,Object> params);
+
+	
+
 }

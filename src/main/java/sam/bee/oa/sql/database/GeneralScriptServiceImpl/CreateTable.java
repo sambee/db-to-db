@@ -16,12 +16,12 @@ import sam.bee.oa.sql.freemarker.ParaseException;
 @SuppressWarnings({ "rawtypes" })
 public class CreateTable extends BaseService implements MethodExecutor {
 
-	String talbeName;
+	String tableName;
 	List<Map<String, Object>> metas;
 	String type;
 	public CreateTable(String type, String talbeName, List<Map<String, Object>> metas){
 		this.type = type;
-		this.talbeName = talbeName;
+		this.tableName = talbeName;
 		this.metas = metas;
 	}
 
@@ -29,10 +29,7 @@ public class CreateTable extends BaseService implements MethodExecutor {
 	public Object execute(Map params) throws Throwable {
 		
 		DatabaseService service = (DatabaseService)ServiceFactory.getService(DatabaseService.class);
-		
 		Map<String, Object> myParams = new HashMap<String, Object>();
-		
-		String tableName = "system_users";
 		List<Map<String, Object>> fields = service.getMetas(type, tableName);
 		List list = new ArrayList();
 		myParams.put("tableName", tableName);

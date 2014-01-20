@@ -10,7 +10,7 @@ import sam.bee.oa.sql.database.BaseDatabase;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class H2Database extends BaseDatabase{
 
-	Server server;
+	static Server server;
 	public static void main(String[] args) throws SQLException, ClassNotFoundException{
 //		  Class.forName("org.h2.Driver");
 //	       
@@ -25,17 +25,20 @@ public class H2Database extends BaseDatabase{
 	}
 	
 	public H2Database(String jdbc, String user, String password) throws SQLException{
-		// start the TCP Server
-		server = Server.createTcpServer(new String[] { "-tcpPort", "9000" }).start();
+		
+		if(server==null){
+			// start the TCP Server
+			server = Server.createTcpServer(new String[] { "-tcpPort", "9000" }).start();
+		}
 		//System.out.println(jdbc);
 		setConn(DriverManager.getConnection(jdbc, user, password));
 	}
 	
 	@Override
 	public synchronized void closeCon() {
-		//System.out.println("Close h2 server.");
-		// stop the TCP Server
-		server.stop();
+		//System.out.println("Close h2 server.");		
 		super.closeCon();
+		// stop the TCP Server
+		//server.stop();
 	}
 }

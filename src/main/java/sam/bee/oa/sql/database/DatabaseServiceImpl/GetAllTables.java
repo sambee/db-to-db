@@ -15,7 +15,7 @@ public class GetAllTables extends BaseService implements MethodExecutor{
 	
 	@Override
 	public Object execute(Map params) throws Throwable {
-		return sql("get_all_tables." + type +".sql", params);
+		return sql("get_all_tables." + type +".sql", params, getClass());
 	}
 
 	

@@ -57,10 +57,10 @@ class ServiceMethodInterceptor implements MethodInterceptor {
 		if(pkg!=null){
 			
 			Class clsObj = Class.forName(pkg);
-			Class[] argCls = new Class[args.length];
-			for(int i=0;i<argCls.length; i++){
-				argCls[i] = args[i].getClass();
-			}
+//			Class[] argCls = new Class[args.length];
+//			for(int i=0;i<argCls.length; i++){				
+//				argCls[i] = args[i].getClass();
+//			}
 			
 
 			Constructor constructor = clsObj.getConstructor(method.getParameterTypes());

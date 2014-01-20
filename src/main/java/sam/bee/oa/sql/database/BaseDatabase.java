@@ -64,12 +64,9 @@ public class BaseDatabase {
 	public synchronized void closeCon(){
 		try {
 		if (conn != null && !conn.isClosed()){			
-				conn.close();
-		
+				conn.close();		
 		}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (Exception e) {e.printStackTrace();}
 	}
 	
 }

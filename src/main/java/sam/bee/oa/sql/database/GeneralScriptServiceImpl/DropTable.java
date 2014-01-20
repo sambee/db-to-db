@@ -26,7 +26,7 @@ public class DropTable extends BaseService implements MethodExecutor{
 		Map<String, Object> myParams = new HashMap<String, Object>();
 		myParams.put("tableName", tableName);
 		List list = new ArrayList();
-		return new DefaultSql().convert("drop_tables." + type + ".sql", myParams, list, getClass());
+		return new DefaultSql().convert("drop_table." + type + ".sql", myParams, list, getClass());
 	}
 	
 	 
