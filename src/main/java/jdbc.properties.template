@@ -1,4 +1,9 @@
-src.jdbc.class=com.microsoft.sqlserver.jdbc.SQLServerDriver
-src.jdbc.url=jdbc:sqlserver://192.168.1.1:1433;DatabaseName=yourdatabase
-src.jdbc.user=username
-src.jdbc.password=passowrd
+mssql.jdbc.class=com.microsoft.sqlserver.jdbc.SQLServerDriver
+mssql.jdbc.url=jdbc:sqlserver://192.168.1.1:1433;DatabaseName=yourdatabase
+mssql.jdbc.user=username
+mssql.jdbc.password=passowrd
+
+h2.jdbc.class=org.h2.Driver
+h2.jdbc.url=jdbc:h2:tcp://localhost:9000/f:/test
+h2.jdbc.user=sa
+h2.jdbc.password=

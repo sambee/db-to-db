@@ -95,5 +95,9 @@ public abstract class BaseService {
     }
   
     	
+    protected String getDatabaseType() throws Exception{
+    	return getDB().getType();
+    	
+    }
     	
 }

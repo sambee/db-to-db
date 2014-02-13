@@ -14,13 +14,13 @@ public class GetPage extends BaseService implements MethodExecutor {
 	Map<String,Object> paraments;
 	int start; 
 	int pageSize;
-	String type;
+	String dbName;
 	
-	public GetPage(String type, Map<String,Object> paraments, int start, int pageSize){
+	public GetPage(Map<String,Object> paraments, int start, int pageSize){
 		this.paraments = paraments;
 		this.start = start;
 		this.pageSize = pageSize;
-		this.type = type;
+		this.dbName = dbName;
 	}
 	
 	public GetPage(String type, String tableName, int start, int pageSize){
@@ -28,19 +28,18 @@ public class GetPage extends BaseService implements MethodExecutor {
 		paraments.put("tableName", tableName);
 		this.start = start;
 		this.pageSize = pageSize;
-		this.type = type;
 	}
 
 	@Override
 	public Object execute(Map params) throws Throwable {
 		paraments.put("pageStart", start);
 		paraments.put("pageSize", pageSize);
-		List<Map<String,Object>> count = sql("get_count." + type + ".sql", paraments, getClass());
+		List<Map<String,Object>> count = sql("get_count." + getDatabaseType() + ".sql", paraments, getClass());
 		
 		PageModel page = new PageModel();
 		if(count.size()>0){
 			page.setCount((Integer)count.get(0).get("ret"));
-			List<Map<String,Object>> list = sql("get_data." + type + ".sql", paraments, getClass());
+			List<Map<String,Object>> list = sql("get_data." + getDatabaseType() + ".sql", paraments, getClass());
 			
 			page.setList(list);
 		}

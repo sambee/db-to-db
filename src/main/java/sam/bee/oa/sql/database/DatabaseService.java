@@ -11,22 +11,27 @@ import sam.bee.oa.sql.database.model.PageModel;
 public interface DatabaseService {
 	
 	/**
+	 * get meta data.
 	 * 
+	 * @param database name
 	 * @param tableName
 	 * @return
 	 */
-	List<Map<String, Object>> getMetas(String type, String tableName);
+	List<Map<String, Object>> getMetas(String dbName, String tableName);
 
 	/**
+	 * get page infomation.
 	 * 
 	 * @param paraments
 	 * @param start
 	 * @param pageSize
 	 * @return
 	 */
-	PageModel getPage(String type, Map<String,Object> paraments, int start, int pageSize); 
+	PageModel getPage(Map<String,Object> paraments, int start, int pageSize); 
+	
 	
 	/**
+	 * get page info
 	 * 
 	 * @param type
 	 * @param tableName
@@ -46,13 +51,26 @@ public interface DatabaseService {
 	
 	/**
 	 * 
-	 * @param type
+	 * @param srcType
+	 * @param descType
 	 * @param table
+	 * @param fields
 	 * @param isCreateTable
 	 * @param isDropTableIfExist
 	 * @param isCopyData
+	 * @param callback
+	 * @throws Exception
 	 */
-	void exportTable(String srcType, String descType, String table, String fields,  boolean isCreateTable, boolean isDropTableIfExist, boolean isCopyData) throws Exception;
+	void exportTable(String dbName, 
+			String descType, 
+			String table, 
+			String fields,  
+			boolean isCreateTable, 
+			boolean isDropTableIfExist, 
+			boolean isCopyData, 
+			Callback callback) throws Exception;
 	
+	
+	void importTable(String dbType, String sql, Callback callback);
 
 }

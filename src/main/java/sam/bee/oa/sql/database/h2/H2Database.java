@@ -11,6 +11,7 @@ import sam.bee.oa.sql.database.BaseDatabase;
 public class H2Database extends BaseDatabase{
 
 	static Server server;
+	private String type;
 	public static void main(String[] args) throws SQLException, ClassNotFoundException{
 //		  Class.forName("org.h2.Driver");
 //	       
@@ -20,11 +21,11 @@ public class H2Database extends BaseDatabase{
 		String jdbc = "jdbc:h2:tcp://localhost:9000/f:/test";
 		String user = "sa";
 		String password = "";
-		H2Database  db = new H2Database(jdbc, user, password);
+		H2Database  db = new H2Database(jdbc, user, password, "h2");
 		db.closeCon();
 	}
 	
-	public H2Database(String jdbc, String user, String password) throws SQLException{
+	public H2Database(String jdbc, String user, String password, String type) throws SQLException{
 		
 		if(server==null){
 			// start the TCP Server
@@ -32,13 +33,23 @@ public class H2Database extends BaseDatabase{
 		}
 		//System.out.println(jdbc);
 		setConn(DriverManager.getConnection(jdbc, user, password));
+		this.type = type;
 	}
 	
 	@Override
-	public synchronized void closeCon() {
-		//System.out.println("Close h2 server.");		
+	public synchronized void closeCon() {		
 		super.closeCon();
-		// stop the TCP Server
-		//server.stop();
+//		// stop the TCP Server		
+//		try {
+//			System.out.println("Closing h2 server.");		
+//			server.stop();			
+//			Thread.sleep(5000);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
+//		finally{
+//			server = null;
+//		}
+//		System.out.println("Closed h2 server.");	
 	}
 }

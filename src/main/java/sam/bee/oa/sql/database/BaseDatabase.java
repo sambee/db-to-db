@@ -13,13 +13,14 @@ public class BaseDatabase {
 	private static Logger logger = Logger.getLogger(BaseDatabase.class);
 	
 	private Connection conn = null;
-
+	private String type;
 
 	public BaseDatabase(){
 		
 	}
 	
-	public BaseDatabase(Connection conn) throws SQLException{
+	public BaseDatabase(Connection conn, String type) throws SQLException{
+		this.type = type;
 		setConn(conn);
 	}
 	
@@ -64,9 +65,15 @@ public class BaseDatabase {
 	public synchronized void closeCon(){
 		try {
 		if (conn != null && !conn.isClosed()){			
-				conn.close();		
+				conn.close();
+				conn = null;
 		}
 		} catch (Exception e) {e.printStackTrace();}
 	}
+	
+	public String getType(){
+		return type;
+	}
+	
 	
 }

@@ -2,6 +2,7 @@ package sam.bee.oa.sql.database.DatabaseServiceImpl;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,10 +24,16 @@ public class GetAllTablesTest {
 		
 		List<Map<String, Object>> list = service.getAllTables("mssql");
 		
+		List<String> stringList = new ArrayList();
 		for(Map<String, Object> m : list){
-			System.out.println(m);
+			stringList.add(m.get("name")+ "=create");
 		}
 	
+		java.util.Collections.sort(stringList);
+		for(int i=0;i<stringList.size();i++){
+			System.out.println(stringList.get(i));
+		}
+		
 	}
 
 }

@@ -1,5 +1,6 @@
 package sam.bee.oa.sql.database.GeneralScriptServiceImpl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,19 +39,24 @@ public class CreateRecord extends BaseService implements MethodExecutor {
 			fields.add(key);
 			Object obj = valuesMap.get(key);
 			if(obj  instanceof String){
+				String objStr = (String)obj;
+				obj = objStr.replaceAll("'", "''");
 				types.add("string");
 			}
 			else if(obj  instanceof Date){
 				types.add("datetime");
 			}
-			else if(obj  instanceof Integer || obj  instanceof Long ){
+			else if(obj  instanceof Integer || obj  instanceof Long || obj  instanceof Float || obj  instanceof Double || obj instanceof BigDecimal ){
 				types.add("number");
 			}
 			else {
+				if(obj!=null){
+					throw new GeneralException("Parse object type error" + obj.getClass());
+				}
 				types.add("unknow");
 			}
 			
-			values.add(valuesMap.get(key));
+			values.add(obj);
 			
 		}
 		

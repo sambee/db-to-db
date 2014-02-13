@@ -3,3 +3,4 @@
 
 /*.log
 /src/main/java/jdbc.properties
+/src/test/java/*.properties
