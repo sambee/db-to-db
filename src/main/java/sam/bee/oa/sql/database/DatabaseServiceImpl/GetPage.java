@@ -16,14 +16,16 @@ public class GetPage extends BaseService implements MethodExecutor {
 	int pageSize;
 	String dbName;
 	
-	public GetPage(Map<String,Object> paraments, int start, int pageSize){
+	public GetPage(String dbName, Map<String,Object> paraments, int start, int pageSize){
+		this.dbName = dbName;
 		this.paraments = paraments;
 		this.start = start;
-		this.pageSize = pageSize;
-		this.dbName = dbName;
+		this.pageSize = pageSize;		
 	}
 	
-	public GetPage(String type, String tableName, int start, int pageSize){
+	@SuppressWarnings("unchecked")
+	public GetPage(String dbName, String tableName, int start, int pageSize){
+		this.dbName = dbName;
 		this.paraments = new HashMap();
 		paraments.put("tableName", tableName);
 		this.start = start;
@@ -33,13 +35,20 @@ public class GetPage extends BaseService implements MethodExecutor {
 	@Override
 	public Object execute(Map params) throws Throwable {
 		paraments.put("pageStart", start);
-		paraments.put("pageSize", pageSize);
-		List<Map<String,Object>> count = sql("get_count." + getDatabaseType() + ".sql", paraments, getClass());
 		
+		List<Map<String,Object>> countObjs = sql(dbName, "get_count." + getDatabaseType(dbName) + ".sql", paraments, getClass());
+
 		PageModel page = new PageModel();
-		if(count.size()>0){
-			page.setCount((Integer)count.get(0).get("ret"));
-			List<Map<String,Object>> list = sql("get_data." + getDatabaseType() + ".sql", paraments, getClass());
+		if(countObjs.size()>0){
+			Integer count = Integer.valueOf((Integer)countObjs.get(0).get("ret"));
+			if(pageSize>count){
+				paraments.put("pageSize", count);
+			}
+			else{
+				paraments.put("pageSize", pageSize);
+			}
+			page.setCount(count);
+			List<Map<String,Object>> list = sql(dbName, "get_data." + getDatabaseType(dbName) + ".sql", paraments, getClass());
 			
 			page.setList(list);
 		}

@@ -8,14 +8,15 @@ import sam.bee.oa.sql.database.BaseService;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class GetAllTables extends BaseService implements MethodExecutor{
 
-	String type;
-	public GetAllTables(String type){
-		this.type = type;
+	String dbName;
+	
+	public GetAllTables(String dbName){
+		this.dbName = dbName;
 	}
 	
 	@Override
 	public Object execute(Map params) throws Throwable {
-		return sql("get_all_tables." + type +".sql", params, getClass());
+		return sql(dbName, "get_all_tables." + getDatabaseType(dbName) +".sql", params, getClass());
 	}
 
 	

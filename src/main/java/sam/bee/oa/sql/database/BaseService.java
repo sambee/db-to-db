@@ -10,6 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import sam.bee.oa.sql.freemarker.BaseSql;
 import sam.bee.oa.sql.freemarker.ParaseException;
 import sam.bee.oa.sql.utils.JdbcConverter;
@@ -18,7 +20,7 @@ import sam.bee.oa.sql.utils.JdbcConverter;
 
 public abstract class BaseService {
 
-
+	protected final static Logger log = Logger.getLogger(BaseService.class);
 	private BaseDatabase db = null;
 	
 	class SQLEntity{
@@ -38,9 +40,12 @@ public abstract class BaseService {
 
 	}
 	
-	public BaseDatabase getDB() throws SQLException, IOException{
+	public BaseDatabase getDB(String dbName) throws SQLException, IOException{
 		if(db==null){
-			db = DatabaseFactory.getDatabase("mssql");
+			db = DatabaseFactory.getDatabase(dbName);
+		}
+		if(db==null){
+			throw new NullPointerException("Can not found the data base configuation:"+ dbName);
 		}
 		return db;
 	}
@@ -79,10 +84,10 @@ public abstract class BaseService {
      * @return
      * @throws Exception
      */
-    public List<Map<String,Object>> sql(String templateName, Map params, Class owner) throws Exception{
+    public List<Map<String,Object>> sql(String dbName, String templateName, Map params, Class owner) throws Exception{
     	SQLEntity ety =getSqlEntity(templateName, params, owner);
-    	System.out.println(ety.sql);
-    	ResultSet rs = getDB().getResultSet(ety.sql, ety.params.toArray(new Object[ety.params.size()]));
+    	log.info(ety.sql);
+    	ResultSet rs = getDB(dbName).getResultSet(ety.sql, ety.params.toArray(new Object[ety.params.size()]));
     	ArrayList<Map<String,Object>> list =null;
     	try{
     		list = JdbcConverter.resultSetToList(rs);
@@ -95,9 +100,13 @@ public abstract class BaseService {
     }
   
     	
-    protected String getDatabaseType() throws Exception{
-    	return getDB().getType();
+    protected String getDatabaseType(String dbName) throws Exception{    	
+    	if(getDB(dbName).getType() == null){
+    		throw new NullPointerException("Can not get the db type:" + dbName);
+    	}
+    	return getDB(dbName).getType();
     	
     }
-    	
+    
+   	
 }

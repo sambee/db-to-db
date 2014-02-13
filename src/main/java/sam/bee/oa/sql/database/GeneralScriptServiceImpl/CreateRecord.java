@@ -13,13 +13,14 @@ import sam.bee.oa.sql.freemarker.DefaultSql;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class CreateRecord extends BaseService implements MethodExecutor {
-
+	String dbName; 
 	String type;
 	String tableName;
 	Map<String, Object> valuesMap;	
 	Map<String, Object> params;
 	
-	public CreateRecord(String type, String talbeName, Map<String, Object> valuesMap, Map<String, Object> params){
+	public CreateRecord(String dbName, String type, String talbeName, Map<String, Object> valuesMap, Map<String, Object> params){
+		this.dbName = dbName;
 		this.type = type;
 		this.tableName = talbeName;
 		this.valuesMap = valuesMap;

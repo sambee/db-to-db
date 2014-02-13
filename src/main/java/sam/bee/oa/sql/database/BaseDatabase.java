@@ -1,15 +1,15 @@
 package sam.bee.oa.sql.database;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Observable;
 
 import org.apache.log4j.Logger;
 
  
-public class BaseDatabase {
+public class BaseDatabase extends Observable{
 	private static Logger logger = Logger.getLogger(BaseDatabase.class);
 	
 	private Connection conn = null;
@@ -26,12 +26,16 @@ public class BaseDatabase {
 	
 	public boolean update(String sql)throws SQLException {
 		Statement stmt = conn.createStatement();
-		boolean ret = stmt.execute(sql);
+		boolean ret = stmt.execute(sql);		
 		closeStatement(stmt);
+		setChanged();
+	    notifyObservers();
 		return ret;
 	}
 
 	public synchronized ResultSet getResultSet(String sql) throws SQLException {
+		setChanged();
+	    notifyObservers();
 		return getResultSet(sql, null);
 	}
 			
@@ -40,6 +44,8 @@ public class BaseDatabase {
 		if(args==null || args.length==0){
 			stmt.executeQuery(sql);
 		}
+		setChanged();
+	    notifyObservers();
 		return stmt.executeQuery(sql); 
 	}
 
@@ -75,5 +81,7 @@ public class BaseDatabase {
 		return type;
 	}
 	
-	
+	public void setType(String type){
+		this.type = type;
+	}
 }

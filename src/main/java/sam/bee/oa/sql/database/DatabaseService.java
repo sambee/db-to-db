@@ -7,13 +7,11 @@ import org.h2.mvstore.Page;
 
 import sam.bee.oa.sql.database.model.PageModel;
 
-
 public interface DatabaseService {
-	
+
 	/**
 	 * get meta data.
 	 * 
-	 * @param database name
 	 * @param tableName
 	 * @return
 	 */
@@ -27,9 +25,9 @@ public interface DatabaseService {
 	 * @param pageSize
 	 * @return
 	 */
-	PageModel getPage(Map<String,Object> paraments, int start, int pageSize); 
-	
-	
+	PageModel getPage(String dbName, Map<String, Object> paraments, int start,
+			int pageSize);
+
 	/**
 	 * get page info
 	 * 
@@ -39,20 +37,19 @@ public interface DatabaseService {
 	 * @param pageSize
 	 * @return
 	 */
-	PageModel getPage(String type, String tableName, int start, int pageSize);
-	
-	
+	PageModel getPage(String dbName, String tableName, int start, int pageSize);
+
 	/**
 	 * Get all tables info.
+	 * 
 	 * @return
 	 */
-	List<Map<String, Object>> getAllTables(String type);
+	List<Map<String, Object>> getAllTables(String dbName);
 
-	
 	/**
 	 * 
-	 * @param srcType
-	 * @param descType
+	 * @param data source source name 
+	 * @param output data source name
 	 * @param table
 	 * @param fields
 	 * @param isCreateTable
@@ -61,16 +58,10 @@ public interface DatabaseService {
 	 * @param callback
 	 * @throws Exception
 	 */
-	void exportTable(String dbName, 
-			String descType, 
-			String table, 
-			String fields,  
-			boolean isCreateTable, 
-			boolean isDropTableIfExist, 
-			boolean isCopyData, 
-			Callback callback) throws Exception;
-	
-	
-	void importTable(String dbType, String sql, Callback callback);
+	void exportTable(String srcDBName, String outputType, String table,
+			String fields, boolean isCreateTable, boolean isDropTableIfExist,
+			boolean isCopyData, Callback callback) throws Exception;
+
+	void importTable(String dbName, String sql, Callback callback);
 
 }

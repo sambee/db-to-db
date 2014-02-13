@@ -21,12 +21,12 @@ import sam.bee.oa.sql.database.model.PageModel;
 
 
 public class GetMetasTest {
-
+	String dbName = "mssql";
 
 	@Test
 	public void test() {
 		DatabaseService service = (DatabaseService)ServiceFactory.getService(DatabaseService.class);
-		service.getMetas("mssql","system_users");
+		service.getMetas(dbName,"system_users");
 		
 		
 	}

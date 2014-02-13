@@ -1,15 +1,11 @@
 package sam.bee.oa.sql.database.DatabaseServiceImpl;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import sam.bee.oa.sql.core.MethodExecutor;
 import sam.bee.oa.sql.core.ServiceFactory;
-import sam.bee.oa.sql.database.BaseDatabase;
 import sam.bee.oa.sql.database.BaseService;
 import sam.bee.oa.sql.database.Callback;
-import sam.bee.oa.sql.database.DatabaseFactory;
 import sam.bee.oa.sql.database.DatabaseService;
 import sam.bee.oa.sql.database.GeneralScriptService;
 import sam.bee.oa.sql.database.model.PageModel;
@@ -17,17 +13,18 @@ import sam.bee.oa.sql.database.model.PageModel;
 
 public class ExportTable extends BaseService implements MethodExecutor{
 
-	String dbName;
-	String descType;
+	
 	boolean isCreateTable;
 	boolean isDropTableIfExist;
 	boolean isCopyData;
 	String tableName;
 	Callback callback;
+	String srcDBName;
+	String outputType;
 	
 	public ExportTable(
-			String dbName, 
-			String descType,
+			String srcDBName,
+			String outputType,
 			String tableName, 
 			String fields,  
 			boolean isCreateTable, 
@@ -36,8 +33,8 @@ public class ExportTable extends BaseService implements MethodExecutor{
 			Callback callback
 			
 			){
-		this.dbName = dbName;
-		this.descType = descType;
+		this.srcDBName = srcDBName;
+		this.outputType = outputType;
 		this.tableName = tableName;
 		this.isCreateTable = isCreateTable;
 		this.isDropTableIfExist = isDropTableIfExist;
@@ -55,23 +52,24 @@ public class ExportTable extends BaseService implements MethodExecutor{
 		GeneralScriptService gen = (GeneralScriptService)ServiceFactory.getService(GeneralScriptService.class);
 		
 		if(isDropTableIfExist){
-			String sql = gen.dropTable(descType, tableName);
+			String sql = gen.dropTable(outputType, tableName);
 			if(callback!=null){
 				callback.execute(sql);
 			}
 		}
 		
 		if(isCreateTable){		
-			String sql = gen.createTable(descType, tableName, service.getMetas(dbName, tableName));
+			String sql = gen.createTable(srcDBName, outputType, tableName, service.getMetas(srcDBName, tableName));
 			if(callback!=null){
 				callback.execute(sql);
+				//log.info(sql);
 			}
 		}
 		
 		if(isCopyData){
-			PageModel page = service.getPage(dbName, tableName, 0, Integer.MAX_VALUE);
+			PageModel page = service.getPage(srcDBName,tableName, 0, Integer.MAX_VALUE);
 			for(Map<String, Object> valuesMap :page.getList()){
-				String sql = gen.createRecord(descType, tableName, valuesMap, params);
+				String sql = gen.createRecord(srcDBName, outputType,  tableName, valuesMap, params);
 				if(callback!=null){
 					callback.execute(sql);
 				}

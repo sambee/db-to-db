@@ -2,8 +2,16 @@ mssql.jdbc.class=com.microsoft.sqlserver.jdbc.SQLServerDriver
 mssql.jdbc.url=jdbc:sqlserver://192.168.1.1:1433;DatabaseName=yourdatabase
 mssql.jdbc.user=username
 mssql.jdbc.password=passowrd
+mssql.jdbc.type=mssql
 
 h2.jdbc.class=org.h2.Driver
 h2.jdbc.url=jdbc:h2:tcp://localhost:9000/f:/test
 h2.jdbc.user=sa
 h2.jdbc.password=
+h2.jdbc.type=mssql
+
+other.jdbc.class=com.microsoft.sqlserver.jdbc.SQLServerDriver
+other.jdbc.url=jdbc:sqlserver://192.168.1.1:1433;DatabaseName=yourdatabase2s
+other.jdbc.user=username
+other.jdbc.password=passowrd
+other.jdbc.type=mssql

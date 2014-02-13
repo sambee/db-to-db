@@ -17,14 +17,14 @@ import org.junit.matchers.JUnitMatchers.*;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class GetPageTest {
-
+	String dbName = "mssql";
 	@Test
 	public void test() {
 		DatabaseService db = (DatabaseService)ServiceFactory.getService(DatabaseService.class);
 	
 		Map paraments = new HashMap();
 		paraments.put("tableName", "ams_sys_query");
-		PageModel page = db.getPage(paraments, 0, 20);
+		PageModel page = db.getPage(dbName, paraments, 0, 20);
 		
 		List<Map<String, Object>> list  = page.getList();
 		System.out.println(list.size());

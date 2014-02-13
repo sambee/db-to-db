@@ -11,6 +11,7 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 
+import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import sam.bee.oa.sql.core.ServiceFactory;
@@ -22,14 +23,15 @@ import static org.junit.Assert.*;
 public class ExportTableTest {
 
 	BufferedWriter file;
-	
+	String dbName = "mssql";
+	private final static Logger log = Logger.getLogger(ExportTableTest.class);
 	@Test
 	public void test() throws Exception{		
-		//doAction("mssql");
-		doAction("gkams");		
+		doAction("mssql", "h2");
+		doAction("jkams", "h2");		
 	}
 	
-	private void doAction(String dbName)throws Exception{
+	private void doAction(String dbName, String outputType)throws Exception{
 		
 //		 ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 	     InputStream in = ClassLoader.getSystemResourceAsStream("gen_database.properties");
@@ -47,9 +49,9 @@ public class ExportTableTest {
 
 			@Override
 			public boolean execute(Object obj) throws Exception {
-				System.out.println(obj);
+				//System.out.println(obj);
 				file.write(String.valueOf(obj).replaceAll("\n|\r", ""));				
-				file.write("\r\n");
+				file.write("\r\n");				
 				return true;
 			}
 			
@@ -65,22 +67,19 @@ public class ExportTableTest {
 		
 		//chao yang
 		for(Object table : p.keySet()){			
-			if(!String.valueOf(table).startsWith("deploy.")){
-				
+			if(!String.valueOf(table).startsWith("deploy.")){				
 
 				file  = new BufferedWriter( new OutputStreamWriter(new FileOutputStream(deployPath + "\\"  + date +  "\\" +dbName + "_h2@" +  table + "@" + date + ".sql"), "UTF-8"));				
 				String actions = p.getProperty((String)table);
 				boolean copyData = actions.contains("data");				
-				service.exportTable(dbName,"h2", (String)table, "all", true, true, copyData, callback);
+				service.exportTable(dbName, outputType, (String)table, "all", true, true, copyData, callback);
 			}
 			if(file!=null){
 				file.close();
 			}		
-		}		
+		}
 		
-	
-		
-		System.out.println("[DONE]" + path);
+		log.info("[DONE]" + path);
 	}
 	
 }

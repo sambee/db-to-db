@@ -18,7 +18,7 @@ import sam.bee.oa.sql.database.DatabaseService;
 
 public class ExportAllTableTest {
 
-
+	String dbName = "mssql";
 	
 	@Test
 	public void test() throws Exception{
@@ -33,7 +33,8 @@ public class ExportAllTableTest {
 		
 		BaseDatabase db = DatabaseFactory.getDatabase(descType);
 
-		List<Map<String, Object>> names = service.getAllTables("mssql");
+
+		List<Map<String, Object>> names = service.getAllTables(dbName);
 		
 		
 		Callback callback = new Callback(){
@@ -51,7 +52,7 @@ public class ExportAllTableTest {
 			try{
 			String tableName = (String)name.get("name");
 			System.out.println(tableName);
-			service.exportTable("mssql","h2",tableName , "all", true, true, true, callback);
+			service.exportTable(dbName, "h2",tableName , "all", true, true, true, callback);
 			}
 			catch(JdbcSQLException ex){
 				System.err.println(ex.getMessage());

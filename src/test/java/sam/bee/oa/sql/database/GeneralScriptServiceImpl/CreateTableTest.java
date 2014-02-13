@@ -19,13 +19,15 @@ import sam.bee.oa.sql.database.GeneralScriptService;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class CreateTableTest {
 
+	String dbName = "mssql";
+	String outputType = "h2";
 	@Test
 	public void test() {
 		
 		GeneralScriptService service = (GeneralScriptService)ServiceFactory.getService(GeneralScriptService.class);
 		
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-		String sql  = service.createTable("h2","system_users", list);
+		String sql  = service.createTable(dbName, outputType, "system_users", list);
 		System.out.println(sql);
 	}
 

@@ -12,11 +12,11 @@ import sam.bee.oa.sql.freemarker.DefaultSql;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class DropTable extends BaseService implements MethodExecutor{
 	
-	String type;
+	String outputType;
 	String tableName;
 	
-	public DropTable(String type, String tableName){
-		this.type = type;
+	public DropTable(String outputType, String tableName){
+		this.outputType = outputType;
 		this.tableName = tableName;
 	}
 
@@ -26,7 +26,7 @@ public class DropTable extends BaseService implements MethodExecutor{
 		Map<String, Object> myParams = new HashMap<String, Object>();
 		myParams.put("tableName", tableName);
 		List list = new ArrayList();
-		return new DefaultSql().convert("drop_table." + type + ".sql", myParams, list, getClass());
+		return new DefaultSql().convert("drop_table." + outputType + ".sql", myParams, list, getClass());
 	}
 	
 	 

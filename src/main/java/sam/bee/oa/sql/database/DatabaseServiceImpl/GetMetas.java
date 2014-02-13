@@ -18,16 +18,15 @@ public class GetMetas extends BaseService implements MethodExecutor {
 
 	String tableName;
 	String dbName;
-	
-	public GetMetas(String dbName,String tableName){
+	public GetMetas(String dbName, String tableName){	
+		this.dbName =dbName;
 		this.tableName = tableName;	
-		this.dbName = dbName;
 	}
 
 	@Override
 	public Object execute(Map params) throws Throwable{
 		List list = new ArrayList();
-		ResultSet rs = getDB().getResultSet("select * from " + tableName);
+		ResultSet rs = getDB(dbName).getResultSet("select * from " + tableName);
 				
 		ResultSetMetaData rsmd = rs.getMetaData();
 		
@@ -62,7 +61,7 @@ public class GetMetas extends BaseService implements MethodExecutor {
 			  list.add(meta);
 		  }
 		
-		DatabaseMetaData dm = getDB().getConn().getMetaData( );
+		DatabaseMetaData dm = getDB(dbName).getConn().getMetaData( );
 		
 //		getDataBaseInformations(dm);
 //		out.println("--------------------------------");

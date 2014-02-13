@@ -7,17 +7,30 @@ import org.h2.tools.Server;
 
 import sam.bee.oa.sql.database.BaseDatabase;
 
+/**
+ * 
+ * @see http://boonya.iteye.com/blog/1828240	
+ *
+ * H2Database.java
+ *
+ * @author Sam Wong
+ *  QQ: 1557299538
+ * @create: 2014年2月13日  
+ * 
+ * Modification
+ * -------------------------------------------
+ */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class H2Database extends BaseDatabase{
 
 	static Server server;
-	private String type;
+
 	public static void main(String[] args) throws SQLException, ClassNotFoundException{
 //		  Class.forName("org.h2.Driver");
 //	       
 //	        // add application code here
 //	        conn.close();
-	   
+   
 		String jdbc = "jdbc:h2:tcp://localhost:9000/f:/test";
 		String user = "sa";
 		String password = "";
@@ -33,12 +46,24 @@ public class H2Database extends BaseDatabase{
 		}
 		//System.out.println(jdbc);
 		setConn(DriverManager.getConnection(jdbc, user, password));
-		this.type = type;
+		setType(type);
 	}
 	
 	@Override
-	public synchronized void closeCon() {		
-		super.closeCon();
+	public synchronized void closeCon() {
+		if(server.isRunning(true)){ 
+			//System.out.println("TCP服务器正在运行......");  
+			super.closeCon();
+		};		
+		
+		
+//		 if(server.isRunning(true)){  
+//             System.out.println("TCP服务器正在运行......");  
+//             server.startWebServer(DBConnection.getConnection());  
+//         }  
+//         server.shutdownTcpServer("tcp://192.168.8.33:9094", "boonya", true, false);//url,password,boolean,boolean  
+//         server.stop();  
+         
 //		// stop the TCP Server		
 //		try {
 //			System.out.println("Closing h2 server.");		

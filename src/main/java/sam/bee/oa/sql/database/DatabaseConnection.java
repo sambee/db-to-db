@@ -8,7 +8,18 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-
+/**
+ * 
+ *
+ * DatabaseConnection.java
+ *
+ * @author Sam Wong
+ *  QQ: 1557299538
+ * @create: 2014年2月13日  
+ * 
+ * Modification
+ * -------------------------------------------
+ */
 public class DatabaseConnection {
 	
 		private static Logger logger = Logger.getLogger(DatabaseConnection.class);
@@ -25,11 +36,12 @@ public class DatabaseConnection {
 		
 		public Connection getConnection() {
 			try {
+			
 				Class.forName(prop.getProperty(dbName + ".jdbc.class"));
 				Connection conn = DriverManager.getConnection(getJDBC(), getUser(), getPassword());
 				return conn;
 			} catch (Exception e) {
-				logger.error(e);
+				logger.error("",e);
 			}
 			return null;
 		}
