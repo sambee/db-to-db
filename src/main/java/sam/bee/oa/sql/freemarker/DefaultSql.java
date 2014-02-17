@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings({ "rawtypes", "unchecked" })
+@SuppressWarnings({ "all" })
 public class DefaultSql extends BaseSql{
 
 	public String convert(String sql, Map<String, Object> paramenters, List<Object> list, Class owner) throws ParaseException {

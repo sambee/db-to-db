@@ -35,7 +35,7 @@ public class DatabaseFactory{
 		DatabaseConnection c = new DatabaseConnection(dbName);
 
 		Monitor mon;
-		final long timeout = 30000;
+		final long timeout = 300000;
 
 		if (dbs == null) {
 			dbs = new HashMap<String, Monitor>();

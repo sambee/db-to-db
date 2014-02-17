@@ -4,7 +4,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,8 +11,8 @@ import java.util.Map;
 
 import sam.bee.oa.sql.core.MethodExecutor;
 import sam.bee.oa.sql.database.BaseService;
-import static java.lang.System.out;
 
+@SuppressWarnings({"unchecked","rawtypes"})
 public class GetMetas extends BaseService implements MethodExecutor {
 
 	String tableName;
@@ -23,14 +22,19 @@ public class GetMetas extends BaseService implements MethodExecutor {
 		this.tableName = tableName;	
 	}
 
+	
 	@Override
 	public Object execute(Map params) throws Throwable{
-		List list = new ArrayList();
-		ResultSet rs = getDB(dbName).getResultSet("select * from " + tableName);
+		
+		DatabaseMetaData dm = getDB(dbName).getConn().getMetaData( );
+
+		List<Map> list = new ArrayList();
+		List<String> primaryKeys = getAllPrimaryKeys(dm, null, tableName);
+		ResultSet rs = getDB(dbName).getResultSet("select top 0 * from " + tableName);
 				
 		ResultSetMetaData rsmd = rs.getMetaData();
 		
-		
+			
 		  for (int i = 1; i <= rsmd.getColumnCount(); i++) {
 			  String colName = rsmd.getColumnName(i);
 			  int type = rsmd.getColumnType(i);
@@ -42,6 +46,7 @@ public class GetMetas extends BaseService implements MethodExecutor {
 			  String clsName = rsmd.getColumnClassName(i);
 			  String tableN = rsmd.getTableName(i);
 			  int isAllowNull = rsmd.isNullable(i);
+			  
 //			  out.print(colName);
 //			  out.print(" " + typeName);
 //			  out.print(" " + colLen);
@@ -58,11 +63,13 @@ public class GetMetas extends BaseService implements MethodExecutor {
 			  meta.put("COL_SCALE", scale);
 			  meta.put("COL_CLASS", clsName);
 			  meta.put("COL_NULLABLE", isAllowNull);
+			  if(primaryKeys.contains(colName)){
+				  meta.put("COL_PRIMARY", true);
+			  }
 			  list.add(meta);
 		  }
 		
-		DatabaseMetaData dm = getDB(dbName).getConn().getMetaData( );
-		
+//DatabaseMetaData dm = getDB(dbName).getConn().getMetaData( );		
 //		getDataBaseInformations(dm);
 //		out.println("--------------------------------");
 //		getAllTableList(dm, null);
@@ -250,18 +257,24 @@ public class GetMetas extends BaseService implements MethodExecutor {
 	/**
 	 * 获得一个表的主键信息
 	 */
-	public void getAllPrimaryKeys(DatabaseMetaData dbMetaData, String schemaName, String tableName) {
+	public List<String> getAllPrimaryKeys(DatabaseMetaData dbMetaData, String schemaName, String tableName) {
+		
+		List<String> list = new ArrayList<String>(0);
+		
 		try{
             ResultSet rs = dbMetaData.getPrimaryKeys(null, schemaName, tableName);
+            
             while (rs.next()){
             	String columnName = rs.getString("COLUMN_NAME");//列名
-                short keySeq = rs.getShort("KEY_SEQ");//序列号(主键内值1表示第一列的主键，值2代表主键内的第二列)
-                String pkName = rs.getString("PK_NAME"); //主键名称  
-                System.out.println(columnName + "-" + keySeq + "-" + pkName);   
+                //short keySeq = rs.getShort("KEY_SEQ");//序列号(主键内值1表示第一列的主键，值2代表主键内的第二列)
+                //String pkName = rs.getString("PK_NAME"); //主键名称  
+                //System.out.println(columnName + "-" + keySeq + "-" + pkName);
+            	list.add(columnName);
             }
         }catch (SQLException e){
             e.printStackTrace();
         }
+		return list;
 	}
 
 
