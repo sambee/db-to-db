@@ -25,7 +25,8 @@ public class DatabaseFactory{
 
 	static Map<String, Monitor> dbs;
 	private final static Logger log = Logger.getLogger(DatabaseFactory.class);
-
+	private final static long timeout = 300000;
+	
 	public static BaseDatabase getDatabase(String dbName) throws SQLException,
 			IOException {
 
@@ -34,31 +35,23 @@ public class DatabaseFactory{
 		}
 		DatabaseConnection c = new DatabaseConnection(dbName);
 
-		Monitor mon;
-		final long timeout = 300000;
 
-		if (dbs == null) {
-			dbs = new HashMap<String, Monitor>();
-		}
 
-		mon = dbs.get(dbName);
+		Monitor mon = getDBS().get(dbName);
 		if (mon == null) {
 
 			BaseDatabase db;
 			if ("h2".equals(c.getType())) {
 				log.info("create h2 database connection:" + c.getJDBC());
 				db = new H2Database(c.getJDBC(), c.getUser(), c.getPassword(),c.getType());
-				mon = new Monitor(dbName, db, timeout);
-				db.addObserver(mon);
-				dbs.put(dbName, mon);
-				new Thread(mon).start();
+				registerDatabase(dbName, db);
+				mon = getDBS().get(dbName);
+			
 			} else if ("mssql".equals(c.getType())) {
 				log.info("create mssql database connection:" + c.getJDBC());
 				db = new BaseDatabase(c.getConnection(), c.getType());
-				mon = new Monitor(dbName, db, timeout);
-				db.addObserver(mon);
-				dbs.put(dbName, mon);
-				new Thread(mon).start();
+				registerDatabase(dbName, db);
+				mon = getDBS().get(dbName);
 			} else {
 				throw new SQLException("Can not get the data base name"
 						+ dbName);
@@ -66,8 +59,21 @@ public class DatabaseFactory{
 		}
 		return mon.getBaseData();
 	}
-
-
+	
+	public static void registerDatabase(String dbName, BaseDatabase db ){
+		Monitor mon;
+		mon = new Monitor(dbName, db, timeout);
+		db.addObserver(mon);
+		getDBS().put(dbName, mon);
+		new Thread(mon).start();
+	}
+	
+	private static Map<String, Monitor> getDBS(){
+		if (dbs == null) {
+			dbs = new HashMap<String, Monitor>();
+		}
+		return dbs;
+	}
 }
 
 class Monitor implements Runnable,Observer{

@@ -1,9 +1,11 @@
 package sam.bee.oa.sql.database.DatabaseServiceImpl;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Date;
 import java.util.List;
@@ -25,24 +27,42 @@ public class ExportTableTest {
 	BufferedWriter file;
 	String dbName = "mssql";
 	private final static Logger log = Logger.getLogger(ExportTableTest.class);
+	
 	@Test
-	public void test() throws Exception{		
-		doAction("mssql", "h2");
-		doAction("jkams", "h2");		
+	public void gkams0220Tomegkams0220Test() throws Exception{		
+		doAction("gkams0220", "h2");
+		
+	}
+
+	@Test
+	public void amskf722Tomeamskf722Test() throws Exception{		
+		doAction("amskf722","h2");
+	}
+	
+	@Test
+	public void gkams0220Tomegkams0220_Mssql_Test() throws Exception{		
+		doAction("gkams0220", "mssql");
+		
+	}
+
+	@Test
+	public void amskf722Tomeamskf722_Mssql_Test() throws Exception{		
+		doAction("amskf722","mssql");
 	}
 	
 	private void doAction(String dbName, String outputType)throws Exception{
 		
 //		 ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 	     InputStream in = ClassLoader.getSystemResourceAsStream("gen_database.properties");
+	     BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 	     Properties p = new Properties();
-	     p.load(in);
+	     p.load(br);
 	       
 		DatabaseService service = (DatabaseService)ServiceFactory.getService(DatabaseService.class);
 		
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy_MM_dd");
 		
-		String deployPath = p.getProperty("deploy.path");
+		String deployPath = p.getProperty("deploy.path") + "/" + outputType +"/";
 		
 
 		Callback callback = new Callback(){
@@ -69,7 +89,7 @@ public class ExportTableTest {
 		for(Object table : p.keySet()){			
 			if(!String.valueOf(table).startsWith("deploy.")){				
 
-				file  = new BufferedWriter( new OutputStreamWriter(new FileOutputStream(deployPath + "\\"  + date +  "\\" +dbName + "_h2@" +  table + "@" + date + ".sql"), "UTF-8"));				
+				file  = new BufferedWriter( new OutputStreamWriter(new FileOutputStream(deployPath + "\\"  + date +  "\\" +dbName +  "_" + outputType  + "_" + table + "@" + date + ".sql"), "UTF-8"));				
 				String actions = p.getProperty((String)table);
 				boolean copyData = actions.contains("data");				
 				service.exportTable(dbName, outputType, (String)table, "all", true, true, copyData, callback);
