@@ -12,11 +12,11 @@ import sam.bee.oa.sql.database.model.PageModel;
 public class GetPage extends BaseService implements MethodExecutor {
 
 	Map<String,Object> paraments;
-	int start; 
-	int pageSize;
+	long start; 
+	long pageSize;
 	String dbName;
-	
-	public GetPage(String dbName, Map<String,Object> paraments, int start, int pageSize){
+	private static final int MAX_ROW = 1000;
+	public GetPage(String dbName, Map<String,Object> paraments, long start, long pageSize){
 		this.dbName = dbName;
 		this.paraments = paraments;
 		this.start = start;
@@ -24,7 +24,7 @@ public class GetPage extends BaseService implements MethodExecutor {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public GetPage(String dbName, String tableName, int start, int pageSize){
+	public GetPage(String dbName, String tableName, long start, long pageSize){
 		this.dbName = dbName;
 		this.paraments = new HashMap();
 		paraments.put("tableName", tableName);
@@ -41,16 +41,25 @@ public class GetPage extends BaseService implements MethodExecutor {
 		PageModel page = new PageModel();
 		if(countObjs.size()>0){
 			Integer count = Integer.valueOf((Integer)countObjs.get(0).get("ret"));
-			if(pageSize>count){
+			
+			if(pageSize>MAX_ROW){
+				pageSize = MAX_ROW;
+				paraments.put("pageSize", pageSize);
+			}
+			else if(pageSize>count){
 				paraments.put("pageSize", count);
 			}
 			else{
 				paraments.put("pageSize", pageSize);
 			}
 			page.setCount(count);
+
 			List<Map<String,Object>> list = sql(dbName, "get_data." + getDatabaseType(dbName) + ".sql", paraments, getClass());
 			
+			page.setStart(start);
 			page.setList(list);
+			page.setCount(count);
+			page.setPageSize(pageSize);
 		}
 		
 		return page;

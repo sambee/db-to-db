@@ -10,7 +10,7 @@ import sam.bee.oa.sql.database.DatabaseService;
 import sam.bee.oa.sql.database.GeneralScriptService;
 import sam.bee.oa.sql.database.model.PageModel;
 
-
+@SuppressWarnings({"rawtypes","unchecked"})
 public class ExportTable extends BaseService implements MethodExecutor{
 
 	
@@ -44,6 +44,7 @@ public class ExportTable extends BaseService implements MethodExecutor{
 	}
 	
 
+
 	@Override
 	public Object execute(Map params) throws Throwable {
 		
@@ -60,20 +61,31 @@ public class ExportTable extends BaseService implements MethodExecutor{
 		
 		if(isCreateTable){		
 			String sql = gen.createTable(srcDBName, outputType, tableName, service.getMetas(srcDBName, tableName));
+			//log.info(sql);
 			if(callback!=null){
-				callback.execute(sql);
-				//log.info(sql);
+				callback.execute(sql);				
 			}
 		}
 		
 		if(isCopyData){
-			PageModel page = service.getPage(srcDBName,tableName, 0, Integer.MAX_VALUE);
-			for(Map<String, Object> valuesMap :page.getList()){
-				String sql = gen.createRecord(srcDBName, outputType,  tableName, valuesMap, params);
-				if(callback!=null){
-					callback.execute(sql);
-				}
-			}
+			long start = 0;
+			long pageSize =Integer.MAX_VALUE;
+			PageModel page;
+			do{
+				page = service.getPage(srcDBName,tableName, start, pageSize);				
+//				log.info("PAGE SIZE:"+page.getPageSize());
+//				log.info("PAGE START:"+page.getStart());
+				
+				for(Map<String, Object> valuesMap :page.getList()){
+					String sql = gen.createRecord(srcDBName, outputType,  tableName, valuesMap, params);
+					if(callback!=null){
+						callback.execute(sql);
+					}					
+				}	
+				start = page.getStart()+page.getPageSize();
+				pageSize = page.getPageSize(); 
+			}while(start<page.getCount());
+
 			
 		}
 		return null;

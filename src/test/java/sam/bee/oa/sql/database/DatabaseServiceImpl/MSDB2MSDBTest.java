@@ -15,18 +15,23 @@ import sam.bee.oa.sql.database.DatabaseService;
 public class MSDB2MSDBTest {
 	
 	private static final Logger log = Logger.getLogger(MSDB2MSDBTest.class);
-	@Test
-	public void gkams0220Tomegkams0220Test() throws Exception{		
-		doAction("gkams0220", "megkams0220");
-		
-	}
-
+//	@Test
+//	public void gkams0220Tomegkams0220Test() throws Exception{		
+//		doAction("gkams0220", "megkams0220");
+//		
+//	}
+//
 	@Test
 	public void amskf722Tomeamskf722Test() throws Exception{		
-		doAction("amskf722", "meamskf722");
+		doAction("amskf722", "ams178");
 	}
+//	
+//	@Test
+//	public void amskf722Tomeamskf722Test() throws Exception{		
+//		doAction("jkams", "mejk0320");
+//	}
 	
-	private void doAction(String dbName, final String descDB)throws Exception{
+	private void doAction(String srcName, final String descDB)throws Exception{
 
 		final DatabaseService db = (DatabaseService) ServiceFactory.getService(DatabaseService.class);
 		
@@ -53,15 +58,15 @@ public class MSDB2MSDBTest {
 
 		};
 	
-		String descDBType =  p2.getProperty(dbName + ".jdbc.type");
+		String descDBType =  p2.getProperty(srcName + ".jdbc.type");
 		
 		for (Object table : p.keySet()) {
-			System.out.println("Import " + table);
+			//System.out.println("Import " + table);
 			if (!String.valueOf(table).startsWith("deploy.")) {
 				
 				String actions = p.getProperty((String)table);
 				boolean copyData = actions.contains("data");	
-				service.exportTable(dbName, descDBType, (String)table, "all", true, true, copyData, callback);
+				service.exportTable(srcName, descDBType, (String)table, "all", true, true, copyData, callback);
 			}
 			
 		}		

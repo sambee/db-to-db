@@ -31,7 +31,6 @@ public class ExportTableTest {
 	@Test
 	public void gkams0220Tomegkams0220Test() throws Exception{		
 		doAction("gkams0220", "h2");
-		
 	}
 
 	@Test
@@ -54,15 +53,12 @@ public class ExportTableTest {
 		
 //		 ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 	     InputStream in = ClassLoader.getSystemResourceAsStream("gen_database.properties");
-	     BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 	     Properties p = new Properties();
-	     p.load(br);
+	     p.load(new BufferedReader(new InputStreamReader(in, "UTF-8")));
 	       
 		DatabaseService service = (DatabaseService)ServiceFactory.getService(DatabaseService.class);
 		
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy_MM_dd");
-		
-		String deployPath = p.getProperty("deploy.path") + "/" + outputType +"/";
 		
 
 		Callback callback = new Callback(){
@@ -79,8 +75,8 @@ public class ExportTableTest {
 		
 		String date = sdf.format(new Date());
 		
-		String path = deployPath + "\\" + date;
-		File f = new File(path);
+		String deployPath = p.getProperty("deploy.path") + "/" + outputType +"/" + "\\" + date;
+		File f = new File(deployPath);
 		if(!f.exists()){
 			f.mkdirs();	
 		}
@@ -89,7 +85,7 @@ public class ExportTableTest {
 		for(Object table : p.keySet()){			
 			if(!String.valueOf(table).startsWith("deploy.")){				
 
-				file  = new BufferedWriter( new OutputStreamWriter(new FileOutputStream(deployPath + "\\"  + date +  "\\" +dbName +  "_" + outputType  + "_" + table + "@" + date + ".sql"), "UTF-8"));				
+				file  = new BufferedWriter( new OutputStreamWriter(new FileOutputStream(deployPath +  "\\" +dbName +  "_" + outputType  + "_" + table + "@" + date + ".sql"), "UTF-8"));				
 				String actions = p.getProperty((String)table);
 				boolean copyData = actions.contains("data");				
 				service.exportTable(dbName, outputType, (String)table, "all", true, true, copyData, callback);
@@ -99,7 +95,7 @@ public class ExportTableTest {
 			}		
 		}
 		
-		log.info("[DONE]" + path);
+		log.info("[DONE]" + deployPath);
 	}
 	
 }

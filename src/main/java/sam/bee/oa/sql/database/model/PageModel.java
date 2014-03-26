@@ -6,7 +6,15 @@ import java.util.Map;
 public class PageModel {
 
 	private long count;
-	private long currentIndex = -1;	
+	private long start = -1;
+	private long pageSize = 0;
+	
+	public long getPageSize() {
+		return pageSize;
+	}
+	public void setPageSize(long pageSize) {
+		this.pageSize = pageSize;
+	}
 	List<Map<String, Object>> list;
 	
 	public long getCount() {
@@ -18,11 +26,11 @@ public class PageModel {
 	public List<Map<String, Object>> getList() {
 		return list;
 	}
-	public long getCurrentIndex() {
-		return currentIndex;
+	public long getStart() {
+		return start;
 	}
-	public void setCurrentIndex(long currentIndex) {
-		this.currentIndex = currentIndex;
+	public void setStart(long start) {
+		this.start = start;
 	}
 	public void setList(List<Map<String, Object>> list) {
 		this.list = list;

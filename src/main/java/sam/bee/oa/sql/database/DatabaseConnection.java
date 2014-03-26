@@ -67,4 +67,8 @@ public class DatabaseConnection {
 		 return prop.getProperty(dbName + ".jdbc.type");
 	 }
 	 
+	 public String getDBName(){
+		 return this.dbName;
+		 }
+	 
 }

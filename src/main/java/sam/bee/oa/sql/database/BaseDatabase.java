@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 
  
 public class BaseDatabase extends Observable{
-	private static Logger logger = Logger.getLogger(BaseDatabase.class);
+	private static Logger log = Logger.getLogger(BaseDatabase.class);
 	
 	private Connection conn = null;
 	private String type;
@@ -28,6 +28,7 @@ public class BaseDatabase extends Observable{
 	
 	public boolean update(String sql)throws SQLException {
 		Statement stmt = conn.createStatement();
+		//log.info(sql);
 		boolean ret = stmt.execute(sql);		
 		closeStatement(stmt);
 		setChanged();

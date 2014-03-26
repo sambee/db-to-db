@@ -41,7 +41,11 @@ public class DatabaseFactory{
 		if (mon == null) {
 
 			BaseDatabase db;
-			if ("h2".equals(c.getType())) {
+			if(c.getType() == null){
+				throw new SQLException("Can not get the database type:"
+						+ dbName);
+			}
+			else if ("h2".equals(c.getType())) {
 				log.info("create h2 database connection:" + c.getJDBC());
 				db = new H2Database(c.getJDBC(), c.getUser(), c.getPassword(),c.getType());
 				registerDatabase(dbName, db);
@@ -53,7 +57,7 @@ public class DatabaseFactory{
 				registerDatabase(dbName, db);
 				mon = getDBS().get(dbName);
 			} else {
-				throw new SQLException("Can not get the data base name"
+				throw new SQLException("Can not get the data base name:"
 						+ dbName);
 			}
 		}

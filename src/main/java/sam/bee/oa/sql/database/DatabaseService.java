@@ -25,8 +25,8 @@ public interface DatabaseService {
 	 * @param pageSize
 	 * @return
 	 */
-	PageModel getPage(String dbName, Map<String, Object> paraments, int start,
-			int pageSize);
+	PageModel getPage(String dbName, Map<String, Object> paraments, long start,
+			long pageSize);
 
 	/**
 	 * get page info
@@ -37,7 +37,7 @@ public interface DatabaseService {
 	 * @param pageSize
 	 * @return
 	 */
-	PageModel getPage(String dbName, String tableName, int start, int pageSize);
+	PageModel getPage(String dbName, String tableName, long start, long pageSize);
 
 	/**
 	 * Get all tables info.

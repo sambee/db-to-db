@@ -1,5 +1,6 @@
 package sam.bee.oa.sql.database.DatabaseServiceImpl;
 
+import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -47,6 +48,7 @@ public class GetMetas extends BaseService implements MethodExecutor {
 			  String tableN = rsmd.getTableName(i);
 			  int isAllowNull = rsmd.isNullable(i);
 			  
+  
 //			  out.print(colName);
 //			  out.print(" " + typeName);
 //			  out.print(" " + colLen);
@@ -63,6 +65,22 @@ public class GetMetas extends BaseService implements MethodExecutor {
 			  meta.put("COL_SCALE", scale);
 			  meta.put("COL_CLASS", clsName);
 			  meta.put("COL_NULLABLE", isAllowNull);
+			  
+			  
+			  
+			  Connection conn = getDB(dbName).getConn();
+			  DatabaseMetaData md = conn.getMetaData();  
+			  ResultSet rs2 = md.getColumns(null, null,tableName, colName);
+			  String columnDefaultVal = null;
+			  while(rs2.next()){
+				  columnDefaultVal  =  rs2.getString("COLUMN_DEF");
+				  if(columnDefaultVal!=null){
+					  meta.put("COL_DEFAULT_VALUES", columnDefaultVal);
+				  }
+			  }
+			 
+ 
+			  
 			  if(primaryKeys.contains(colName)){
 				  meta.put("COL_PRIMARY", true);
 			  }

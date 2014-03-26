@@ -37,16 +37,16 @@ public class ImportTableTest {
 	     SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
 	     String date = sdf.format(new Date());
 	     
-		doAction("gkams0220","h2", date);
+		doAction("gkams0220","mejkams20140307", date);
 		
 	}
 
-	@Test
-	public void amskf722Tomeamskf722Test() throws Exception{	
-	     SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
-	     String date = sdf.format(new Date());
-		doAction("amskf722", "h2", date);
-	}
+//	@Test
+//	public void amskf722Tomeamskf722Test() throws Exception{	
+//	     SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
+//	     String date = sdf.format(new Date());
+//		doAction("amskf722", "h2", date);
+//	}
 	
 	private String getJdbcHeader(){		
 		return "jdbc:h2:";
@@ -108,7 +108,7 @@ public class ImportTableTest {
 				file = new BufferedReader(new FileReader(new File(sqlFile)));
 				String sql;
 				while ((sql = file.readLine()) != null) {
-					service.importTable(c.getType(), sql, callback);
+					service.importTable(c.getDBName(), sql, callback);
 				}
 
 			}

@@ -86,7 +86,7 @@ public abstract class BaseService {
      */
     public List<Map<String,Object>> sql(String dbName, String templateName, Map params, Class owner) throws Exception{
     	SQLEntity ety =getSqlEntity(templateName, params, owner);
-    	log.info(ety.sql);
+    	//log.info(ety.sql);
     	ResultSet rs = getDB(dbName).getResultSet(ety.sql, ety.params.toArray(new Object[ety.params.size()]));
     	ArrayList<Map<String,Object>> list =null;
     	try{
