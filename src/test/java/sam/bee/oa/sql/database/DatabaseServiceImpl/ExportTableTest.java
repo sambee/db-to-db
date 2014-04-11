@@ -30,24 +30,24 @@ public class ExportTableTest {
 	
 	@Test
 	public void gkams0220Tomegkams0220Test() throws Exception{		
-		doAction("gkams0220", "h2");
+		doAction("meamskf20140313", "mssql");
 	}
 
-	@Test
-	public void amskf722Tomeamskf722Test() throws Exception{		
-		doAction("amskf722","h2");
-	}
-	
-	@Test
-	public void gkams0220Tomegkams0220_Mssql_Test() throws Exception{		
-		doAction("gkams0220", "mssql");
-		
-	}
-
-	@Test
-	public void amskf722Tomeamskf722_Mssql_Test() throws Exception{		
-		doAction("amskf722","mssql");
-	}
+//	@Test
+//	public void amskf722Tomeamskf722Test() throws Exception{		
+//		doAction("amskf722","h2");
+//	}
+//	
+//	@Test
+//	public void gkams0220Tomegkams0220_Mssql_Test() throws Exception{		
+//		doAction("gkams0220", "mssql");
+//		
+//	}
+//
+//	@Test
+//	public void amskf722Tomeamskf722_Mssql_Test() throws Exception{		
+//		doAction("amskf722","mssql");
+//	}
 	
 	private void doAction(String dbName, String outputType)throws Exception{
 		
@@ -97,5 +97,8 @@ public class ExportTableTest {
 		
 		log.info("[DONE]" + deployPath);
 	}
+	
+	
+	
 	
 }

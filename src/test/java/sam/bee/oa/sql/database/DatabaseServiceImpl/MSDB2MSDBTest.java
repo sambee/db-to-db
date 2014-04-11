@@ -15,16 +15,16 @@ import sam.bee.oa.sql.database.DatabaseService;
 public class MSDB2MSDBTest {
 	
 	private static final Logger log = Logger.getLogger(MSDB2MSDBTest.class);
-//	@Test
-//	public void gkams0220Tomegkams0220Test() throws Exception{		
-//		doAction("gkams0220", "megkams0220");
-//		
-//	}
-//
 	@Test
-	public void amskf722Tomeamskf722Test() throws Exception{		
-		doAction("amskf722", "ams178");
+	public void gkams0220Tomegkams0220Test() throws Exception{		
+		doAction("amskf722", "meamskf20140313");
+		
 	}
+//
+//	@Test
+//	public void amskf722Tomeamskf722Test() throws Exception{		
+//		doAction("amskf722", "ams178");
+//	}
 //	
 //	@Test
 //	public void amskf722Tomeamskf722Test() throws Exception{		

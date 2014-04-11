@@ -48,20 +48,29 @@ public class CreateAsscessTest {
 	    }
 
 	    @Test
-	    public void test() throws IOException, SQLException, ClassNotFoundException {
+	    public void test1() throws IOException, SQLException, ClassNotFoundException {
 	       // startDatabaseProcess();
-	    	String file = "d://employeedb.mdb";
-	    	createDatabase(file);
-	    	 Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+//	    	String file = "d://employeedb.mdb";
+//	    	createDatabase(file);
+//	    	 Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+//	    	 Connection con = DriverManager
+//	    			 .getConnection("jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=" + file, "", "");
+//    	 
+//	    	 Statement stm = con.createStatement();
+//	    	 
+//	    	 //counter,text,char,varchar,memo,short,long,single,double,datetime,logical,currency,oleobject
+//	    	 stm.execute("Create TABLE Employee(ID varchar(10), name text(20))");
+//	    	 con.close();
+	    	 
+	    	 
+	    	String file = "F:\\meiluo\\mlams_2.0_dev_trunk\\server\\temp/1395984837270.mdb";
 	    	 Connection con = DriverManager
-	    			 .getConnection("jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=" + file, "", "");
-    	 
-	    	 Statement stm = con.createStatement();
-	    	 
-	    	 //counter,text,char,varchar,memo,short,long,single,double,datetime,logical,currency,oleobject
-	    	 stm.execute("Create TABLE Employee(ID varchar(10), name text(20))");
-	    	 con.close();
-	    	 
-	    	 
+			 .getConnection("jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=" + file, "", "");
+
+			 Statement stm = con.createStatement();
+			 
+			 con.close();
+			 
+			 System.out.println("111111111111111111111111111111111111111");
 	    }
 }
