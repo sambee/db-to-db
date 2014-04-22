@@ -34,6 +34,18 @@ public class DatabaseConnection {
 			this.dbName = dbName;
 		}
 		
+		public DatabaseConnection(String type, String jdbc, String user, String password){
+			prop.setProperty(type + ".jdbc.url", jdbc);
+			prop.setProperty(type + ".jdbc.url", jdbc);
+			prop.setProperty(type + ".jdbc.user", user);
+			prop.setProperty(type + ".jdbc.password", password);
+		}
+		
+		public DatabaseConnection(String dbName, Properties p){
+			this.prop = p;
+			this.dbName = dbName;
+		}
+		
 		public Connection getConnection() {
 			try {
 			

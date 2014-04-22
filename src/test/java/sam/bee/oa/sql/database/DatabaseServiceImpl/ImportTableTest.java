@@ -74,7 +74,7 @@ public class ImportTableTest {
 
 		 if(c.getType().equals("h2")){
 			 H2Database db = new H2Database(jdbc, c.getUser(), c.getPassword(),c.getType());
-			 DatabaseFactory.registerDatabase(descDBName, db); 
+			 DatabaseFactory.getInstance().registerDatabase(descDBName, db); 
 			 
 			File dbFile = new File(deployFile);
 			if(dbFile.exists()){
@@ -83,7 +83,7 @@ public class ImportTableTest {
 		 }
 		 else{
 			 BaseDatabase db = new BaseDatabase(c.getConnection(),c.getType());
-			 DatabaseFactory.registerDatabase(descDBName, db);  
+			 DatabaseFactory.getInstance().registerDatabase(descDBName, db);  
 		 }
 		 
 		

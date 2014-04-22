@@ -24,10 +24,10 @@ public class ImportTable extends BaseService implements MethodExecutor {
 
 	@Override
 	public Object execute(Map params) throws Throwable {
-		BaseDatabase db = DatabaseFactory.getDatabase(dbName);
+		BaseDatabase db = DatabaseFactory.getInstance().getDatabase(dbName);
 		db.update(sql);
 		if(callback!=null){
-			callback.execute(sql);
+			return callback.execute(sql);
 		}
 		return null;
 	}

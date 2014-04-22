@@ -17,7 +17,7 @@ public class MSDB2MSDBTest {
 	private static final Logger log = Logger.getLogger(MSDB2MSDBTest.class);
 	@Test
 	public void gkams0220Tomegkams0220Test() throws Exception{		
-		doAction("amskf722", "meamskf20140313");
+		doAction("ams178", "amskf411");
 		
 	}
 //
@@ -71,5 +71,6 @@ public class MSDB2MSDBTest {
 			
 		}		
 
+		log.info("------------------- DONE ------------------------------");
 	}
 }

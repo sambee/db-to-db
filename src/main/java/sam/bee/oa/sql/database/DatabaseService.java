@@ -64,4 +64,5 @@ public interface DatabaseService {
 
 	void importTable(String dbName, String sql, Callback callback);
 
+	void close();
 }

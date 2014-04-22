@@ -21,6 +21,7 @@ public class ExportTable extends BaseService implements MethodExecutor{
 	Callback callback;
 	String srcDBName;
 	String outputType;
+	String fields;
 	
 	public ExportTable(
 			String srcDBName,
@@ -38,7 +39,7 @@ public class ExportTable extends BaseService implements MethodExecutor{
 		this.tableName = tableName;
 		this.isCreateTable = isCreateTable;
 		this.isDropTableIfExist = isDropTableIfExist;
-		this.isDropTableIfExist = isDropTableIfExist;
+		this.fields = fields;
 		this.isCopyData = isCopyData;
 		this.callback = callback;
 	}
@@ -48,7 +49,14 @@ public class ExportTable extends BaseService implements MethodExecutor{
 	@Override
 	public Object execute(Map params) throws Throwable {
 		
-	
+		isValidate(srcDBName,
+		 outputType,
+		 tableName,
+		 fields,
+		 isCreateTable,
+		 isDropTableIfExist,	
+		 isCopyData);
+		
 		DatabaseService service = (DatabaseService)ServiceFactory.getService(DatabaseService.class);
 		GeneralScriptService gen = (GeneralScriptService)ServiceFactory.getService(GeneralScriptService.class);
 		
@@ -89,6 +97,24 @@ public class ExportTable extends BaseService implements MethodExecutor{
 			
 		}
 		return null;
+	}
+	
+	private void isValidate(	String srcDBName,
+			String outputType,
+			String tableName, 
+			String fields,  
+			boolean isCreateTable, 
+			boolean isDropTableIfExist, 
+			boolean isCopyData){
+		if(outputType == null || outputType.length()==0){
+			throw new NullPointerException("outputType");
+		}
+		if(tableName == null || tableName.length()==0){
+			throw new NullPointerException("tableName");
+		}
+		if(srcDBName == null || srcDBName.length()==0){
+			throw new NullPointerException("srcDBName");
+		}
 	}
 	
 }

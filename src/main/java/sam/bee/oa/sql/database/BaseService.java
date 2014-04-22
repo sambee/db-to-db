@@ -21,7 +21,8 @@ import sam.bee.oa.sql.utils.JdbcConverter;
 public abstract class BaseService {
 
 	protected final static Logger log = Logger.getLogger(BaseService.class);
-	private BaseDatabase db = null;
+		
+	BaseDatabase db;
 	
 	class SQLEntity{
 		public String sql;
@@ -42,7 +43,7 @@ public abstract class BaseService {
 	
 	public BaseDatabase getDB(String dbName) throws SQLException, IOException{
 		if(db==null){
-			db = DatabaseFactory.getDatabase(dbName);
+			db = DatabaseFactory.getInstance().getDatabase(dbName);
 		}
 		if(db==null){
 			throw new NullPointerException("Can not found the data base configuation:"+ dbName);
@@ -106,6 +107,11 @@ public abstract class BaseService {
     	}
     	return getDB(dbName).getType();
     	
+    }
+    
+    protected void closeDatabase(){
+    	if(db!=null)
+    		db.closeCon();
     }
     
    	

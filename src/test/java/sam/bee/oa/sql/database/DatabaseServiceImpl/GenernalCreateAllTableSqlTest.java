@@ -50,7 +50,7 @@ public class GenernalCreateAllTableSqlTest {
 	
 	public void generalCreateTablesSqlSript(final OutputStream out, String dbName, String type) throws Exception{
 
-		BaseDatabase db = DatabaseFactory.getDatabase(dbName);
+		BaseDatabase db = DatabaseFactory.getInstance().getDatabase(dbName);
 
 		
 		DatabaseService service = (DatabaseService)ServiceFactory.getService(DatabaseService.class);

@@ -18,17 +18,27 @@ public class DropTable extends BaseService implements MethodExecutor{
 	public DropTable(String outputType, String tableName){
 		this.outputType = outputType;
 		this.tableName = tableName;
+		
 	}
 
 	@Override
 	public Object execute(Map params) throws Throwable {
-		
+		isValidate(outputType, tableName);
 		Map<String, Object> myParams = new HashMap<String, Object>();
 		myParams.put("tableName", tableName);
 		List list = new ArrayList();
 		return new DefaultSql().convert("drop_table." + outputType + ".sql", myParams, list, getClass());
 	}
 	
+	private void isValidate(String outputType, String tableName){
+		if(outputType == null || outputType.length()==0){
+			throw new NullPointerException("tableName");
+		}
+		if(tableName == null || tableName.length()==0){
+			throw new NullPointerException("tableName");
+		}
+		
+	}
 	 
 
 	
