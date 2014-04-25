@@ -3,9 +3,11 @@ package sam.bee.oa.sql.database.h2;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.h2.engine.Database;
 import org.h2.tools.Server;
 
 import sam.bee.oa.sql.database.BaseDatabase;
+import sam.bee.oa.sql.database.DatabaseConnection;
 
 /**
  * 
@@ -31,22 +33,21 @@ public class H2Database extends BaseDatabase{
 //	        // add application code here
 //	        conn.close();
    
-		String jdbc = "jdbc:h2:tcp://localhost:9000/f:/test";
-		String user = "sa";
-		String password = "";
-		H2Database  db = new H2Database(jdbc, user, password, "h2");
-		db.closeCon();
+//		String jdbc = "jdbc:h2:tcp://localhost:9000/f:/test";
+//		String user = "sa";
+//		String password = "";
+//		H2Database  db = new H2Database(jdbc, user, password, "h2");
+//		db.closeCon();
 	}
 	
-	public H2Database(String jdbc, String user, String password, String type) throws SQLException{
-		
+	public H2Database(DatabaseConnection conn) throws SQLException, ClassNotFoundException{
+		super(conn);
 		if(server==null){
 			// start the TCP Server
 			server = Server.createTcpServer(new String[] { "-tcpPort", "9000" }).start();
 		}
-		//System.out.println(jdbc);
-		setConn(DriverManager.getConnection(jdbc, user, password));
-		setType(type);
+//		setConn(DriverManager.getConnection(conn.getJDBC(), conn.getUserName(), conn.getPassword()));
+//		setType(type);
 	}
 	
 	@Override

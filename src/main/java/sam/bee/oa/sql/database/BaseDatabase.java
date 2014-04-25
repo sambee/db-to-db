@@ -1,11 +1,9 @@
 package sam.bee.oa.sql.database;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -15,23 +13,17 @@ import org.apache.log4j.Logger;
 public class BaseDatabase extends Observable{
 	private static Logger log = Logger.getLogger(BaseDatabase.class);
 	private final static long timeout = 10000;
-	private Connection conn = null;
-	private String type;
-
-	public BaseDatabase(){
-		
-	}
+	private DatabaseConnection conn = null;
 	
-	public BaseDatabase(Connection conn, String type) throws SQLException{
-		this.type = type;
+	public BaseDatabase(DatabaseConnection conn) throws SQLException, ClassNotFoundException{		
 		setConn(conn);
 		Monitor mon = new Monitor(timeout);
 		addObserver(mon);
 		new Thread(mon).start();
 	}
 	
-	public boolean update(String sql)throws SQLException {
-		Statement stmt = conn.createStatement();
+	public boolean update(String sql)throws SQLException, ClassNotFoundException {
+		Statement stmt = getConn().createStatement();
 		//log.info(sql);
 		boolean ret = stmt.execute(sql);		
 		closeStatement(stmt);
@@ -40,14 +32,14 @@ public class BaseDatabase extends Observable{
 		return ret;
 	}
 
-	public synchronized ResultSet getResultSet(String sql) throws SQLException {
+	public synchronized ResultSet getResultSet(String sql) throws SQLException, ClassNotFoundException {
 		setChanged();
 	    notifyObservers();
 		return getResultSet(sql, null);
 	}
 			
-	public synchronized ResultSet getResultSet(String sql, Object[] args) throws SQLException {
-		Statement stmt = conn.createStatement();
+	public synchronized ResultSet getResultSet(String sql, Object[] args) throws SQLException, ClassNotFoundException {
+		Statement stmt = getConn().createStatement();
 		if(args==null || args.length==0){
 			stmt.executeQuery(sql);
 		}
@@ -66,13 +58,12 @@ public class BaseDatabase extends Observable{
 		}
 	}
 	
-	public Connection getConn() {
-		return conn;
+	public Connection getConn() throws ClassNotFoundException, SQLException {
+		return conn.getConnection();
 	}
 
-	public Connection setConn(Connection conn)  {
+	public void setConn(DatabaseConnection conn)  {
 		this.conn = conn;	    
-	    return conn;
 	}
 	
 	public synchronized void closeCon(){
@@ -85,11 +76,11 @@ public class BaseDatabase extends Observable{
 	}
 	
 	public String getType(){
-		return type;
+		return conn.getType();
 	}
 	
 	public void setType(String type){
-		this.type = type;
+		this.conn.setType(type);;
 	}
 }
 

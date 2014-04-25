@@ -6,33 +6,44 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import sam.bee.oa.db.MsDBToAccessDB;
-import sam.bee.oa.sql.database.BaseDatabase;
-import sam.bee.oa.sql.database.DatabaseConnection;
-import sam.bee.oa.sql.database.DatabaseFactory;
 import sam.bee.oa.sql.database.DatabaseService;
 import sam.bee.oa.sql.database.model.PageModel;
 
 import com.healthmarketscience.jackcess.ColumnBuilder;
+import com.healthmarketscience.jackcess.Cursor;
+import com.healthmarketscience.jackcess.CursorBuilder;
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
 import com.healthmarketscience.jackcess.Table;
 import com.healthmarketscience.jackcess.TableBuilder;
 
-@SuppressWarnings({ "rawtypes", "unchecked" })
 public class AsscssDatabase {
 	
 	private static final Logger log = Logger.getLogger(AsscssDatabase.class);
 	
-	private static TableBuilder createTable(String tableName) {
+	Database accessDB;
+	public AsscssDatabase(File mdbFile) throws IOException{
+		if(!mdbFile.exists()){
+			accessDB = createDatabase(mdbFile);
+		}
+		else{
+			accessDB = DatabaseBuilder.open(mdbFile);
+		}
+	}
+	
+	private Database createDatabase(File dbFile) throws IOException{
+		return DatabaseBuilder.create(Database.FileFormat.V2000,dbFile);
+	}
+	
+	
+	private TableBuilder createTable(String tableName) {
         return new TableBuilder(tableName);
     }
   
-	public int getType(String type){
+	private int getType(String type){
 		if("varchar".equals(type)){
 			return Types.LONGVARCHAR;
 		}
@@ -57,12 +68,10 @@ public class AsscssDatabase {
 		throw new RuntimeException("Unkonw " + type + " sql  type."  );
 	}
 	
-	
-	public List<Map<String, Object>> getSrcInfo(DatabaseService db, String srcDB, String tableName){
-		return 	db.getMetas(srcDB, tableName);
-	}
-	
-	public void createAccessTable(Database accessDB, String tableName, List<Map<String, Object>> fieldsInfo) throws IOException, SQLException{
+	public void createAccessTable(String tableName, List<Map<String, Object>> fieldsInfo) throws IOException, SQLException{
+		if(accessDB==null){
+			throw new NullPointerException("Database base is not opened.");
+		}
 		TableBuilder tableBuilder = createTable(tableName);		
 		for(Map<String,Object> f : fieldsInfo){
 			log.info("Import table:" + tableName);
@@ -71,23 +80,22 @@ public class AsscssDatabase {
 		tableBuilder.toTable(accessDB);
 	}
 	
-	public void importData(Database accessDB , DatabaseService db, String srcDBName, String tableName)throws Exception{
-		
-		long start = 0;
-		long pageSize =Integer.MAX_VALUE;
-		PageModel page;
+	public void addRowFromMap(String tableName, Map<String, Object> data) throws IOException{
+		accessDB.getTable(tableName).addRowFromMap(data);
+	}
+	
+	public void updateRowFromMap(String tableName, String keyName,  String keyValue, Map<String, Object> rowMap) throws IOException{
 		Table table = accessDB.getTable(tableName);
-		do{
-			page = db.getPage(srcDBName,tableName, start, pageSize);	
-			start = page.getStart()+page.getPageSize();
-			pageSize = page.getPageSize(); 
-			System.out.println(String.format("Table: %s, Start:%d, size:%d, count:%d, data count:%d", tableName,start, pageSize, page.getCount(), page.getList().size()));
-			
-			List<Map<String, Object>> data = page.getList();
-			for(Map<String, Object> d : data){
-				table.addRowFromMap(d);
-			}
-			
-		}while(start<page.getCount());
+		Cursor cursor = CursorBuilder.createCursor(table);	
+		while(cursor.moveToNextRow()){
+			cursor.updateCurrentRowFromMap(rowMap);
+		}
+		
+	}
+	
+	public void close() throws IOException{
+		if(accessDB!=null){
+			accessDB.close();
+		}
 	}
 }

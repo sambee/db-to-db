@@ -39,32 +39,33 @@ public class DatabaseFactory implements Observer{
 		if (dbName == null) {
 			throw new NullPointerException("Database name is null point");
 		}
-		DatabaseConnection c = new DatabaseConnection(dbName);
-		
+			
 		BaseDatabase db = getDBS().get(dbName);
 		if (db == null) {
-
-			if(c.getType() == null){
-				throw new SQLException("Can not get the database type:"
-						+ dbName);
-			}
-			else if ("h2".equals(c.getType())) {
-				log.info("create h2 database connection:" + c.getJDBC());
-				db = new H2Database(c.getJDBC(), c.getUser(), c.getPassword(),c.getType());
-				db.addObserver(this);
-				registerDatabase(dbName, db);
-			
-			
-			} else if ("mssql".equals(c.getType())) {
-				log.info("create mssql database connection:" + c.getJDBC());
-				db = new BaseDatabase(c.getConnection(), c.getType());
-				registerDatabase(dbName, db);
-			
-			} else {
-				throw new SQLException("Can not get the data base name:"
-						+ dbName);
-			}
+			throw new SQLException(String.format("please regsiter data base %s first.", dbName));
 		}
+
+//			if(c.getType() == null){
+//				throw new SQLException("Can not get the database type:"
+//						+ dbName);
+//			}
+//			else if ("h2".equals(c.getType())) {
+//				log.info("create h2 database connection:" + c.getJDBC());
+//				db = new H2Database(c.getJDBC(), c.getUser(), c.getPassword(),c.getType());
+//				db.addObserver(this);
+//				registerDatabase(dbName, db);
+//			
+//			
+//			} else if ("mssql".equals(c.getType())) {
+//				log.info("create mssql database connection:" + c.getJDBC());
+//				db = new BaseDatabase(c.getConnection(), c.getType());
+//				registerDatabase(dbName, db);
+//			
+//			} else {
+//				throw new SQLException("Can not get the data base name:"
+//						+ dbName);
+//			}
+//		}
 		return db;
 	}
 	

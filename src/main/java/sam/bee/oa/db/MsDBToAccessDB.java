@@ -8,20 +8,21 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import com.healthmarketscience.jackcess.Table;
+
 import sam.bee.oa.sql.core.ServiceFactory;
 import sam.bee.oa.sql.database.BaseDatabase;
 import sam.bee.oa.sql.database.DatabaseConnection;
 import sam.bee.oa.sql.database.DatabaseFactory;
 import sam.bee.oa.sql.database.DatabaseService;
 import sam.bee.oa.sql.database.asscss.AsscssDatabase;
-
-import com.healthmarketscience.jackcess.Database;
-import com.healthmarketscience.jackcess.DatabaseBuilder;
+import sam.bee.oa.sql.database.model.PageModel;
 
 public class MsDBToAccessDB {
 	private static final Logger log = Logger.getLogger(MsDBToAccessDB.class);
 	
 	public static void main(String[] args) throws Exception {
+		
 		final DatabaseService service = (DatabaseService) ServiceFactory.getService(DatabaseService.class);
 		
 		try{
@@ -59,9 +60,33 @@ public class MsDBToAccessDB {
 //	}
 	
 	
+	private static List<Map<String, Object>> getSrcInfo(AsscssDatabase accessDB, DatabaseService db, String srcDB, String tableName){
+		return 	db.getMetas(srcDB, tableName);
+	}
+	
+	public static void importData(AsscssDatabase accessDB,DatabaseService service, String srcDBName, String tableName)throws Exception{
+		
+		long start = 0;
+		long pageSize =Integer.MAX_VALUE;
+		PageModel page;
+		
+		do{
+			page = service.getPage(srcDBName,tableName, start, pageSize);	
+			start = page.getStart()+page.getPageSize();
+			pageSize = page.getPageSize(); 
+			System.out.println(String.format("Table: %s, Start:%d, size:%d, count:%d, data count:%d", tableName,start, pageSize, page.getCount(), page.getList().size()));
+			
+			List<Map<String, Object>> data = page.getList();
+			for(Map<String, Object> d : data){
+				accessDB.addRowFromMap(tableName, d);
+			}
+			
+		}while(start<page.getCount());
+	}
+	
 	private static void msdbToAsscesDB(DatabaseService service, Properties prop) throws Exception{
 		
-		AsscssDatabase access = new AsscssDatabase();
+		
 		String src = "src";
 		String desc = "desc";
 		
@@ -82,18 +107,17 @@ public class MsDBToAccessDB {
 		
 		//Register src database.
 		DatabaseConnection srcDB = new DatabaseConnection(src, prop);
-		DatabaseFactory.getInstance().registerDatabase(src, new BaseDatabase(srcDB.getConnection(), srcDB.getType()));
+		DatabaseFactory.getInstance().registerDatabase(src, new BaseDatabase(srcDB));
 		
 		//create access file.
-		File accessFile = new File(System.currentTimeMillis() + ".mdb");
-		Database accessDB = DatabaseBuilder.create(Database.FileFormat.V2000,dbFile);
+		AsscssDatabase accessDB = new AsscssDatabase(dbFile);
 
 		for (Object tableKey : prop.keySet()) {
 			if (String.valueOf(tableKey).startsWith("table.")) {
 				String tableName = String.valueOf(tableKey).substring("table.".length());
-				 List<Map<String, Object>> fieldsInfo = access.getSrcInfo(service, src, tableName);
-				 access.createAccessTable(accessDB, tableName, fieldsInfo);
-				 access.importData(accessDB, service, src, tableName);
+				 List<Map<String, Object>> fieldsInfo = getSrcInfo(accessDB, service, src, tableName);
+				 accessDB.createAccessTable(tableName, fieldsInfo);
+				 importData(accessDB, service, src, tableName);
 			}
 		}
 		

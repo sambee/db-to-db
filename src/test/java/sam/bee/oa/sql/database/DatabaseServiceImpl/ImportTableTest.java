@@ -52,7 +52,7 @@ public class ImportTableTest {
 		return "jdbc:h2:";
 	}
 	
-	private void doAction(String dbName, String descDBName, String date)throws IOException, InterruptedException, SQLException{
+	private void doAction(String dbName, String descDBName, String date)throws IOException, InterruptedException, SQLException, ClassNotFoundException{
 	
 
 	     InputStream in = ClassLoader.getSystemResourceAsStream("gen_database.properties");
@@ -65,15 +65,15 @@ public class ImportTableTest {
 	     
 	     
 		 //init jdbc
-		 DatabaseConnection c = new DatabaseConnection(descDBName);
+		 DatabaseConnection descConn = new DatabaseConnection(descDBName, p);
 	     
-		 String deployFile = deployPath + "/"+ c.getType() + "/" +  dbName + "_" + date;   
+		 String deployFile = deployPath + "/"+ descConn.getType() + "/" +  dbName + "_" + date;   
 		 String jdbc = getJdbcHeader() + deployFile; 
 		
 	
 
-		 if(c.getType().equals("h2")){
-			 H2Database db = new H2Database(jdbc, c.getUser(), c.getPassword(),c.getType());
+		 if(descConn.getType().equals("h2")){
+			 H2Database db = new H2Database(descConn);
 			 DatabaseFactory.getInstance().registerDatabase(descDBName, db); 
 			 
 			File dbFile = new File(deployFile);
@@ -82,7 +82,7 @@ public class ImportTableTest {
 			}
 		 }
 		 else{
-			 BaseDatabase db = new BaseDatabase(c.getConnection(),c.getType());
+			 BaseDatabase db = new BaseDatabase(descConn);
 			 DatabaseFactory.getInstance().registerDatabase(descDBName, db);  
 		 }
 		 
@@ -104,11 +104,11 @@ public class ImportTableTest {
 			System.out.println("Import " + table);
 			if (!String.valueOf(table).startsWith("deploy.")) {
 
-				String sqlFile = deployPath + "/" + c.getType() +"/" + date+ "/" +dbName +  "_" + c.getType()  + "_" + table + "@" + date + ".sql";
+				String sqlFile = deployPath + "/" + descConn.getType() +"/" + date+ "/" +dbName +  "_" + descConn.getType()  + "_" + table + "@" + date + ".sql";
 				file = new BufferedReader(new FileReader(new File(sqlFile)));
 				String sql;
 				while ((sql = file.readLine()) != null) {
-					service.importTable(c.getDBName(), sql, callback);
+					service.importTable(descConn.getDBName(), sql, callback);
 				}
 
 			}

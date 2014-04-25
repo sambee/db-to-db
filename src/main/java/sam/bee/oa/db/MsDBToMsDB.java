@@ -29,10 +29,10 @@ public class MsDBToMsDB {
 		String desc = "desc";
 		
 		DatabaseConnection srcDB = new DatabaseConnection(src, prop);
-		DatabaseFactory.getInstance().registerDatabase(src, new BaseDatabase(srcDB.getConnection(), srcDB.getType()));
+		DatabaseFactory.getInstance().registerDatabase(src, new BaseDatabase(new DatabaseConnection(src, prop)));
 		
 		DatabaseConnection descDB = new DatabaseConnection(desc, prop);
-		DatabaseFactory.getInstance().registerDatabase(desc, new BaseDatabase(descDB.getConnection(), descDB.getType()));
+		DatabaseFactory.getInstance().registerDatabase(desc, new BaseDatabase(new DatabaseConnection(desc, prop)));
 	
 		
 		doAction(src, desc, descDB.getType(),  prop);
