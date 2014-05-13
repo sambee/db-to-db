@@ -83,9 +83,14 @@
 			<version>2.3.2</version>
 		</dependency>
 
-<!-- 
-mvn install:install-file -Dfile=ucanaccess-2.0.4.jar -DgroupId=net.ucanaccess -DartifactId=ucanaccess -Dversion=2.0.4 -Dpackaging=jar
- -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-compress</artifactId>
+			<version>1.8</version>
+		</dependency>
+
+		<!-- mvn install:install-file -Dfile=ucanaccess-2.0.4.jar -DgroupId=net.ucanaccess 
+			-DartifactId=ucanaccess -Dversion=2.0.4 -Dpackaging=jar -->
 		<dependency>
 			<groupId>net.ucanaccess</groupId>
 			<artifactId>ucanaccess</artifactId>
@@ -120,7 +125,7 @@ mvn install:install-file -Dfile=ucanaccess-2.0.4.jar -DgroupId=net.ucanaccess -D
 				</includes>
 			</testResource>
 		</testResources>
-		
+
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -148,7 +153,7 @@ mvn install:install-file -Dfile=ucanaccess-2.0.4.jar -DgroupId=net.ucanaccess -D
 					</configuration>
 				</plugin>
 			</plugins>
-		</pluginManagement>	
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -168,40 +173,40 @@ mvn install:install-file -Dfile=ucanaccess-2.0.4.jar -DgroupId=net.ucanaccess -D
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
-			
-			    <!--  使用 maven-jar-plugin 修改 MANIFEST.MF -->
-    	  <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>sam.bee.oa.db.MsDBToAccessDB</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-     <!-- 使用 maven-dependency-plugin 将依赖项复制到库 -->
-             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>
-                              ${project.build.directory}/lib
-                            </outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+
+			<!-- 使用 maven-jar-plugin 修改 MANIFEST.MF -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+							<mainClass>sam.bee.oa.db.Mssql2MssqlScript</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<!-- 使用 maven-dependency-plugin 将依赖项复制到库 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>install</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>
+								${project.build.directory}/lib
+							</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 

@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 import sam.bee.oa.sql.core.ServiceFactory;
 import sam.bee.oa.sql.database.BaseDatabase;
@@ -18,7 +19,7 @@ public class MsDBToMsDB {
 	private static final Logger log = Logger.getLogger(MsDBToMsDB.class);
 	
 	public static void main(String[] args) throws Exception {
-		
+		PropertyConfigurator.configure("log4j.properties");		
 		//load configuration 1.
 		//InputStream in = ClassLoader.getSystemResourceAsStream("35_To_178.properties");
 		FileInputStream fis = new FileInputStream("35_To_178.properties");
@@ -59,7 +60,6 @@ public class MsDBToMsDB {
 		
 		
 		for (Object tableKey : prop.keySet()) {
-			//System.out.println("Import " + table);
 			if (String.valueOf(tableKey).startsWith("table.")) {
 				String table = String.valueOf(tableKey).substring("table.".length());
 				String actions = prop.getProperty((String)tableKey);

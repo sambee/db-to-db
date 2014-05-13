@@ -12,12 +12,12 @@ import org.apache.log4j.Logger;
  
 public class BaseDatabase extends Observable{
 	private static Logger log = Logger.getLogger(BaseDatabase.class);
-	private final static long timeout = 10000;
+	private final static long TIMEOUT = 30000;
 	private DatabaseConnection conn = null;
 	
 	public BaseDatabase(DatabaseConnection conn) throws SQLException, ClassNotFoundException{		
 		setConn(conn);
-		Monitor mon = new Monitor(timeout);
+		Monitor mon = new Monitor(TIMEOUT);
 		addObserver(mon);
 		new Thread(mon).start();
 	}

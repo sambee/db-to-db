@@ -1,5 +1,0 @@
-deploy.default=create, 
-deploy.path=.
-system_users=create,data
-system_domains=create,data
-system_departments=create,data

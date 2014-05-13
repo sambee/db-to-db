@@ -8,8 +8,6 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import com.healthmarketscience.jackcess.Table;
-
 import sam.bee.oa.sql.core.ServiceFactory;
 import sam.bee.oa.sql.database.BaseDatabase;
 import sam.bee.oa.sql.database.DatabaseConnection;
@@ -123,5 +121,6 @@ public class MsDBToAccessDB {
 		
 		accessDB.close();
 	}
+
 
 }
