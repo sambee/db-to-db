@@ -12,6 +12,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import sam.bee.oa.sql.core.ServiceFactory;
 import sam.bee.oa.sql.freemarker.BaseSql;
 import sam.bee.oa.sql.freemarker.ParaseException;
 import sam.bee.oa.sql.utils.JdbcConverter;
@@ -22,22 +23,20 @@ public abstract class BaseService {
 
 	protected final static Logger log = Logger.getLogger(BaseService.class);
     protected String dbName;
-	protected DatabaseService databaseService;
-	protected GeneralScriptService generalScriptService;
 
     public void setDatabaseName(String dbName){
         this.dbName = dbName;
     }
 
-	public void setDatabaseService(){
-		this.databaseService = databaseService;
+	public DatabaseService getDatabaseService(){
+		return ServiceFactory.getService(dbName, DatabaseService.class);
 	}
 
-	public void setGeneralScriptService(){
-		this.generalScriptService = generalScriptService;
+	public GeneralScriptService getGeneralScriptService(){
+		return ServiceFactory.getService(dbName, GeneralScriptService.class);
 	}
 
-	class SQLEntity{
+	protected class SQLEntity{
 		public String sql;
 		public List<Object> params;
 	} 
@@ -93,16 +92,16 @@ public abstract class BaseService {
     public List<Map<String,Object>> sql(String dbName, String templateName, Map params, Class owner) throws Exception{
     	SQLEntity ety =getSqlEntity(templateName, params, owner);
     	//log.info(ety.sql);
-    	ResultSet rs = getDB(dbName).getResultSet(ety.sql, ety.params.toArray(new Object[ety.params.size()]));
-    	ArrayList<Map<String,Object>> list =null;
-    	try{
-    		list = JdbcConverter.resultSetToList(rs);
-    	}
-    	finally{
-    		closeRs(rs);
-    		
-    	}
-    	return list;
+//    	ResultSet rs = getDB(dbName).getResultSet(ety.sql, ety.params.toArray(new Object[ety.params.size()]));
+//    	ArrayList<Map<String,Object>> list =null;
+//    	try{
+//    		list = JdbcConverter.resultSetToList(rs);
+//    	}
+//    	finally{
+//    		closeRs(rs);
+//
+//    	}
+    	return getDB(dbName).getList(ety.sql, ety.params.toArray(new Object[ety.params.size()]));
     }
   
     	

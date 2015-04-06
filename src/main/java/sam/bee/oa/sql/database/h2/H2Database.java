@@ -1,13 +1,11 @@
 package sam.bee.oa.sql.database.h2;
 
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import org.h2.engine.Database;
 import org.h2.tools.Server;
 
 import sam.bee.oa.sql.database.BaseDatabase;
-import sam.bee.oa.sql.database.DatabaseConnection;
+import sam.bee.oa.sql.database.DatabaseConfig;
 
 /**
  * 
@@ -27,7 +25,7 @@ public class H2Database extends BaseDatabase{
 
 	static Server server;
 
-	public static void main(String[] args) throws SQLException, ClassNotFoundException{
+//	public static void main(String[] args) throws SQLException, ClassNotFoundException{
 //		  Class.forName("org.h2.Driver");
 //	       
 //	        // add application code here
@@ -38,9 +36,9 @@ public class H2Database extends BaseDatabase{
 //		String password = "";
 //		H2Database  db = new H2Database(jdbc, user, password, "h2");
 //		db.closeCon();
-	}
+//	}
 	
-	public H2Database(DatabaseConnection conn) throws SQLException, ClassNotFoundException{
+	public H2Database(DatabaseConfig conn) throws SQLException, ClassNotFoundException{
 		super(conn);
 		if(server==null){
 			// start the TCP Server
@@ -50,12 +48,12 @@ public class H2Database extends BaseDatabase{
 //		setType(type);
 	}
 	
-	@Override
-	public synchronized void closeCon() {
-		if(server.isRunning(true)){ 
-			//System.out.println("TCP服务器正在运行......");  
-			super.closeCon();
-		};		
+//	@Override
+//	public synchronized void closeCon() {
+//		if(server.isRunning(true)){
+			//System.out.println("TCP服务器正在运行......");
+//			super.closeCon();
+//		};
 		
 		
 //		 if(server.isRunning(true)){  
@@ -77,5 +75,5 @@ public class H2Database extends BaseDatabase{
 //			server = null;
 //		}
 //		System.out.println("Closed h2 server.");	
-	}
+//	}
 }

@@ -11,14 +11,16 @@ import java.util.Map;
 public class DropTableSql  extends BaseService implements MethodExecutor {
 
     private String tableName;
+    private String expectType;
 
-    public DropTableSql(String tableName){
+   public DropTableSql(String expectType, String tableName){
         this.tableName = tableName;
+       this.expectType = expectType;
     }
     @Override
     public Object execute(Map params) throws Throwable {
 
-        return generalScriptService.dropTable(tableName);
+        return getGeneralScriptService().dropTable(expectType,tableName);
 
     }
 

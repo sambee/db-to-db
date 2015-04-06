@@ -1,15 +1,15 @@
 package sam.bee.oa.sql.core;
 
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
+import sam.bee.oa.sql.database.BaseService;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
-import sam.bee.oa.sql.database.BaseService;
 
 import static sam.bee.oa.sql.utils.StringUtil.toJavaNaming;
 
@@ -17,7 +17,7 @@ import static sam.bee.oa.sql.utils.StringUtil.toJavaNaming;
 public class ServiceFactory {
 
 	private static LinkedHashMap<String, LinkedHashMap<Class, Object>> sessions = new LinkedHashMap();
-
+	private static Map<Class, Object> cls = new HashMap<Class, Object>();
 
 	private static Object createProxy(Class targetClass, String session) {
 		Enhancer enhancer = new Enhancer();
@@ -68,11 +68,6 @@ class ServiceMethodInterceptor implements MethodInterceptor {
 		if(pkg!=null){
 			
 			Class clsObj = Class.forName(pkg);
-//			Class[] argCls = new Class[args.length];
-//			for(int i=0;i<argCls.length; i++){				
-//				argCls[i] = args[i].getClass();
-//			}
-			
 
 			Constructor constructor = clsObj.getConstructor(method.getParameterTypes());
 			MethodExecutor obj = (MethodExecutor)constructor.newInstance(args);

@@ -1,30 +1,19 @@
 package sam.bee.oa.sql.database.DatabaseServiceImpl;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import javax.imageio.stream.FileImageInputStream;
-
 import org.junit.Test;
 
-import sam.bee.oa.sql.core.ServiceFactory;
 import sam.bee.oa.sql.database.BaseDatabase;
-import sam.bee.oa.sql.database.Callback;
-import sam.bee.oa.sql.database.DatabaseConnection;
+import sam.bee.oa.sql.database.DatabaseConfig;
 import sam.bee.oa.sql.database.DatabaseFactory;
-import sam.bee.oa.sql.database.DatabaseService;
 import sam.bee.oa.sql.database.h2.H2Database;
 
 public class ImportTableTest {
@@ -69,7 +58,7 @@ public class ImportTableTest {
             map.put(name, p.getProperty(name));
        }
 		 //init jdbc
-		 DatabaseConnection descConn = new DatabaseConnection(descDBName, map);
+		 DatabaseConfig descConn = new DatabaseConfig(descDBName, map);
 	     
 		 String deployFile = deployPath + "/"+ descConn.getType() + "/" +  dbName + "_" + date;   
 		 String jdbc = getJdbcHeader() + deployFile; 

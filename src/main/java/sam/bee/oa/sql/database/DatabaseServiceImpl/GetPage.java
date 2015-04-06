@@ -1,12 +1,12 @@
 package sam.bee.oa.sql.database.DatabaseServiceImpl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import sam.bee.oa.sql.core.MethodExecutor;
 import sam.bee.oa.sql.database.BaseService;
 import sam.bee.oa.sql.database.model.PageModel;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("rawtypes")
 public class GetPage extends BaseService implements MethodExecutor {
@@ -33,8 +33,11 @@ public class GetPage extends BaseService implements MethodExecutor {
 	@Override
 	public Object execute(Map params) throws Throwable {
 		paraments.put("pageStart", start);
-		
-		List<Map<String,Object>> countObjs = sql(getDatabaseType(), "get_count." + getDatabaseType() + ".sql", paraments, getClass());
+
+		String sql = "get_count." + getDatabaseType() + ".sql";
+		SQLEntity entity = getSqlEntity(sql, paraments, getClass());
+
+		List<Map<String,Object>> countObjs =  sql(dbName, sql, paraments, getClass());
 
 		PageModel page = new PageModel();
 		if(countObjs.size()>0){

@@ -29,46 +29,46 @@ public class GenernalCreateAllTableSqlTest {
 	@Test
 	public void test() throws Exception{
 
-		String outputType = "mssql";
-		String dbName = "amskf722";
-		
-		InputStream in = ClassLoader.getSystemResourceAsStream("gen_database.properties");
-		Properties p = new Properties();
-		p.load(new BufferedReader(new InputStreamReader(in, "UTF-8")));		
-		String date =  new java.text.SimpleDateFormat("yyyy_MM_dd").format(new Date());
-		String deployPath = p.getProperty("deploy.path") + "/" + outputType + "\\" + date;
-		
-		File path = new File(deployPath);
-		if(!path.exists()){
-			path.mkdirs();
-		}
-		final FileOutputStream file = new FileOutputStream(deployPath + "create_tables.sql");
-		generalCreateTablesSqlSript(file, dbName, outputType);
-		System.out.println("Create File at:"+ deployPath);
-		
-	}
-	
-	public void generalCreateTablesSqlSript(final OutputStream out, String dbName, String type) throws Exception{
-
-		BaseDatabase db = DatabaseFactory.getInstance().getDatabase(dbName);
-
-		
-		DatabaseService service = (DatabaseService)ServiceFactory.getService("",DatabaseService.class);
-
-
-		List<Map<String, String>> names = service.getAllTables();
-		
-		
-		Callback callback = new Callback(){
-
-			@Override
-			public boolean execute(Map<String, Object> aData) throws Exception {
-				System.out.println(aData);
-				out.write(String.valueOf(aData).getBytes());
-				return true;
-			}
-			
-		};		
+//		String outputType = "mssql";
+//		String dbName = "amskf722";
+//
+//		InputStream in = ClassLoader.getSystemResourceAsStream("gen_database.properties");
+//		Properties p = new Properties();
+//		p.load(new BufferedReader(new InputStreamReader(in, "UTF-8")));
+//		String date =  new java.text.SimpleDateFormat("yyyy_MM_dd").format(new Date());
+//		String deployPath = p.getProperty("deploy.path") + "/" + outputType + "\\" + date;
+//
+//		File path = new File(deployPath);
+//		if(!path.exists()){
+//			path.mkdirs();
+//		}
+//		final FileOutputStream file = new FileOutputStream(deployPath + "create_tables.sql");
+//		generalCreateTablesSqlSript(file, dbName, outputType);
+//		System.out.println("Create File at:"+ deployPath);
+//
+//	}
+//
+//	public void generalCreateTablesSqlSript(final OutputStream out, String dbName, String type) throws Exception{
+//
+//		BaseDatabase db = DatabaseFactory.getInstance().getDatabase(dbName);
+//
+//
+//		DatabaseService service = (DatabaseService)ServiceFactory.getService("",DatabaseService.class);
+//
+//
+//		List<Map<String, String>> names = service.getAllTables();
+//
+//
+//		Callback callback = new Callback(){
+//
+//			@Override
+//			public boolean execute(Map<String, Object> aData) throws Exception {
+//				System.out.println(aData);
+//				out.write(String.valueOf(aData).getBytes());
+//				return true;
+//			}
+//
+//		};
 		
 //		for(Map<String, String> name : names){
 //			try{
@@ -84,6 +84,6 @@ public class GenernalCreateAllTableSqlTest {
 //			}
 //		}
 		
-		out.close();
+//		out.close();
 	}
 }

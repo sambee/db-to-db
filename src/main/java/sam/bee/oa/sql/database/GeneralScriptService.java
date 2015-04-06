@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface GeneralScriptService {
 	
-	String dropTable(String tableName);
+	String dropTable(String outputType, String tableName);
 	
 	String createTable(String exceptOutputType, String tableName, List<Map<String, Object>> metas);
 	

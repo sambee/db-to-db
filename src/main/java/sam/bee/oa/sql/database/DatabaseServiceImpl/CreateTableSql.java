@@ -19,9 +19,7 @@ private String expectType;
     }
     @Override
     public Object execute(Map params) throws Throwable {
-        List<Map<String, Object>>  metas = databaseService.getMetas(tableName);
-
-        return generalScriptService.createTable(expectType, tableName, metas);
+        return getGeneralScriptService().createTable(expectType, tableName, getDatabaseService().getMetas(tableName));
 
     }
 }

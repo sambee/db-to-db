@@ -1,5 +1,8 @@
 package sambee.db.gui;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.spi.LoggerFactory;
 import sam.bee.oa.sql.core.ServiceFactory;
 import sam.bee.oa.sql.database.BaseDatabase;
 import sam.bee.oa.sql.database.Callback;
@@ -14,17 +17,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Created by Administrator on 2015/4/4.
  */
 public class App {
 
-
+    private static final Log log = LogFactory.getLog(App.class);
     private static final String FILE_CONFIG_NAME = "jdbc.properties";
     public static void main(String[] args) throws Exception {
         final MainForm form =  new MainForm();
@@ -82,6 +82,7 @@ public class App {
             }
         });
 
+        form.getTable().getColumnModel().getColumn(0).setPreferredWidth(300);
         form.getExecuteButton().setEnabled(false);
     }
 
@@ -165,11 +166,19 @@ public class App {
             String tableName;
             Vector<DataModel> dataModels = new Vector<DataModel>();
             DataModel dataModel;
+            String[] tables = new String[tablesInfo.size()];
+            int i=0;
             for(Map<String,String> table :tablesInfo){
                 tableName = table.get("TABLE_NAME");
-                dataModel =new DataModel(tableName, true,true);
+                tables[i++] = tableName;
+            }
+            Arrays.sort(tables);
+
+            for(i=0; i < tables.length; i++){
+                dataModel =new DataModel(tables[i], false,false);
                 dataModels.add(dataModel);
             }
+
 
             tableModel.setData(dataModels);
             tableModel.fireTableDataChanged();
@@ -189,6 +198,7 @@ public class App {
         }
     }
 
+    private static String mTableName;
     public static void execute(MainForm form){
         final String driver = form.getSrcDriver().getText();
         final String jdbc = form.getSrcJDBC().getText();
@@ -210,10 +220,10 @@ public class App {
         }};
 
         Map<String, String> desc = new HashMap<String, String>(){{
-            put("driver", driver);
-            put("jdbc",jdbc);
-            put("user",user);
-            put("password", password);
+            put("driver", descDriver);
+            put("jdbc",descJdbc);
+            put("user",descUser);
+            put("password", descPassword);
 
         }};
 
@@ -223,7 +233,7 @@ public class App {
             DatabaseFactory.getInstance().registerDatabase("desc", desc);
 
             DatabaseService srcService = ServiceFactory.getService("src", DatabaseService.class);
-            DatabaseService descService = ServiceFactory.getService("desc", DatabaseService.class);
+            final DatabaseService descService = ServiceFactory.getService("desc", DatabaseService.class);
             TableModel table =(TableModel) form.getTable().getModel();
             List<DataModel> tableInfo = table.getData();
             DataModel dataModel;
@@ -232,15 +242,22 @@ public class App {
                 dataModel = tableInfo.get(i);
                 if(dataModel.isCreateTable()){
                     //table name;
+                    log.info("Create SQL:" + dataModel.getTableName());
+                    String dropSQL = srcService.dropTableSql(descService.getDatabaseType(), dataModel.getTableName());
+                    descService.executeSQL(dropSQL);
                     String createSQL = srcService.createTableSql(descService.getDatabaseType(), dataModel.getTableName());
+
                     descService.executeSQL(createSQL);
 
                 }
                 if(dataModel.isExportData()){
-                    //table name;
+                    log.info("Copy Data:" + dataModel.getTableName());
+                    mTableName = dataModel.getTableName();
                     srcService.getData(dataModel.getTableName(), new Callback() {
                         @Override
                         public boolean execute(Map<String, Object> aData) throws Throwable {
+                            aData.remove("RN");
+                            descService.saveData(mTableName, aData);
                             return false;
                         }
                     });
@@ -248,6 +265,7 @@ public class App {
 
             }
 
+            log.info("==================  DONE ==================");
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {

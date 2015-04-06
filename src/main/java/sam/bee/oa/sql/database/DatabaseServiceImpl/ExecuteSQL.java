@@ -19,6 +19,7 @@ public class ExecuteSQL extends BaseService implements MethodExecutor {
     @Override
     public Object execute(Map params) throws Throwable {
 
+        getDB(dbName).update(sql);
         return null;
 
     }

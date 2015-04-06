@@ -1,7 +1,6 @@
 package sam.bee.oa.db;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -9,9 +8,8 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import sam.bee.oa.sql.core.ServiceFactory;
 import sam.bee.oa.sql.database.BaseDatabase;
-import sam.bee.oa.sql.database.DatabaseConnection;
+import sam.bee.oa.sql.database.DatabaseConfig;
 import sam.bee.oa.sql.database.DatabaseFactory;
 import sam.bee.oa.sql.database.DatabaseService;
 import sam.bee.oa.sql.database.asscss.AsscssDatabase;
@@ -21,7 +19,6 @@ import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
 import com.healthmarketscience.jackcess.Table;
 
-import static sambee.utils.ConfigUtils.*;
 public class MsDBToAccessDB implements IDatabaseAdapter{
 	private static final Logger log = Logger.getLogger(MsDBToAccessDB.class);
 	
@@ -93,7 +90,7 @@ public class MsDBToAccessDB implements IDatabaseAdapter{
 		}
 		
 		//Register src database.
-		DatabaseConnection srcDB = new DatabaseConnection(src, config);
+		DatabaseConfig srcDB = new DatabaseConfig(src, config);
 		DatabaseFactory.getInstance().registerDatabase(src, new BaseDatabase(srcDB));
 		
 		//create access file.
@@ -116,20 +113,20 @@ public class MsDBToAccessDB implements IDatabaseAdapter{
 	public Object parse(Object... params) throws Exception {
 		String[] args = (String[])params;
 		
-		final DatabaseService service = (DatabaseService) ServiceFactory.getService("", DatabaseService.class);
+//		final DatabaseService service = (DatabaseService) ServiceFactory.getService("", DatabaseService.class);
 		
-		try{
+//		try{
 //		FileInputStream fis = new FileInputStream("mssql_to_access.properties");
 //		Properties prop = new Properties();
 //		prop.load(fis);
 		
-		Map<String,String> config = loadConfig(args[0], getClass().getName());	
-		msdbToAsscesDB(service, config);
+//		Map<String,String> config = loadConfig(args[0], getClass().getName());
+//		msdbToAsscesDB(service, config);
 //		validate(service, prop);
-		}
-		catch(Exception e){
-			log.error("",e);
-		}
+//		}
+//		catch(Exception e){
+//			log.error("",e);
+//		}
 		return null;
 	}
 

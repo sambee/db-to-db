@@ -10,8 +10,7 @@ import org.apache.log4j.PropertyConfigurator;
 
 import sam.bee.oa.sql.core.ServiceFactory;
 import sam.bee.oa.sql.database.BaseDatabase;
-import sam.bee.oa.sql.database.Callback;
-import sam.bee.oa.sql.database.DatabaseConnection;
+import sam.bee.oa.sql.database.DatabaseConfig;
 import sam.bee.oa.sql.database.DatabaseFactory;
 import sam.bee.oa.sql.database.DatabaseService;
 public class H2ToMssql implements IDatabaseAdapter{
@@ -91,8 +90,8 @@ public class H2ToMssql implements IDatabaseAdapter{
 		Map<String,String> config = loadConfig(args[0], getClass().getName());
 		String descType = config.get("desc.jdbc.type");
 		
-		DatabaseFactory.getInstance().registerDatabase(src, new BaseDatabase(new DatabaseConnection(src, config)));
-		DatabaseFactory.getInstance().registerDatabase(desc, new BaseDatabase(new DatabaseConnection(desc, config)));
+		DatabaseFactory.getInstance().registerDatabase(src, new BaseDatabase(new DatabaseConfig(src, config)));
+		DatabaseFactory.getInstance().registerDatabase(desc, new BaseDatabase(new DatabaseConfig(desc, config)));
 
 		createTable(src, desc, descType);
 		importTable(src, desc, descType);
@@ -100,8 +99,8 @@ public class H2ToMssql implements IDatabaseAdapter{
 		log.info("All done.");
 		}
 		finally{
-			DatabaseFactory.getInstance().close(src);
-			DatabaseFactory.getInstance().close(desc);
+//			DatabaseFactory.getInstance().close(src);
+//			DatabaseFactory.getInstance().close(desc);
 		}
 		return null;
 	}

@@ -17,31 +17,30 @@ import sam.bee.oa.sql.freemarker.DefaultSql;
 public class CreateTable extends BaseService implements MethodExecutor {
 
 	String expectedOutputType;
-	String outputType;
 	String tableName;
-
 	List<Map<String, Object>> metas;
 	
 	public CreateTable(String expectedOutputType,String talbeName, List<Map<String, Object>> metas){
 		this.expectedOutputType = expectedOutputType;
-		this.outputType = outputType;
 		this.tableName = talbeName;
 		this.metas = metas;
 	}
 
 	@Override
 	public Object execute(Map params) throws Throwable {		
-		DatabaseService service = (DatabaseService)ServiceFactory.getService("", DatabaseService.class);
+		DatabaseService service = (DatabaseService)ServiceFactory.getService(dbName, DatabaseService.class);
 
 		BaseDatabase srcDB = DatabaseFactory.getInstance().getDatabase(dbName);
 		Map<String, Object> myParams = new HashMap<String, Object>();
 		List<Map<String, Object>> fields = service.getMetas(tableName);
 		
-		if("mssql".equals(outputType) && "h2".equals(srcDB.getType())){
+		if("mssql".equals(expectedOutputType) && "h2".equals(srcDB.getType())){
 			fields = new H2ToMssqlAdapter().paraseFields(fields);
 		}
 		myParams.put("tableName", tableName);
 		myParams.put("fields", fields);
-		return new DefaultSql().convert("create_tables." + outputType + ".sql", myParams, new ArrayList(), getClass());
+		String sql = "create_tables." + expectedOutputType + ".sql";
+		log.info(sql);
+		return new DefaultSql().convert(sql, myParams, new ArrayList(), getClass());
 	};
 }

@@ -4,12 +4,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
 
 import org.apache.log4j.Logger;
-
-import sam.bee.oa.sql.database.h2.H2Database;
 
 /**
  * 
@@ -21,7 +17,7 @@ import sam.bee.oa.sql.database.h2.H2Database;
  * 
  *          Modification -------------------------------------------
  */
-public class DatabaseFactory implements Observer{
+public class DatabaseFactory {
 
 	private Map<String, BaseDatabase> dbs;
 	private final static Logger log = Logger.getLogger(DatabaseFactory.class);
@@ -45,27 +41,6 @@ public class DatabaseFactory implements Observer{
 			throw new SQLException(String.format("please regsiter data base %s first.", dbName));
 		}
 
-//			if(c.getType() == null){
-//				throw new SQLException("Can not get the database type:"
-//						+ dbName);
-//			}
-//			else if ("h2".equals(c.getType())) {
-//				log.info("create h2 database connection:" + c.getJDBC());
-//				db = new H2Database(c.getJDBC(), c.getUser(), c.getPassword(),c.getType());
-//				db.addObserver(this);
-//				registerDatabase(dbName, db);
-//			
-//			
-//			} else if ("mssql".equals(c.getType())) {
-//				log.info("create mssql database connection:" + c.getJDBC());
-//				db = new BaseDatabase(c.getConnection(), c.getType());
-//				registerDatabase(dbName, db);
-//			
-//			} else {
-//				throw new SQLException("Can not get the data base name:"
-//						+ dbName);
-//			}
-//		}
 		return db;
 	}
 	
@@ -75,7 +50,7 @@ public class DatabaseFactory implements Observer{
 	}
 
     public void registerDatabase(String dbName, Map config ) throws SQLException, ClassNotFoundException {
-        getDBS().put(dbName, new BaseDatabase(new DatabaseConnection(dbName, config)));
+        getDBS().put(dbName, new BaseDatabase(new DatabaseConfig(dbName, config)));
 
     }
 
@@ -86,30 +61,9 @@ public class DatabaseFactory implements Observer{
 		return dbs;
 	}
 
-	@Override
-	public void update(Observable o, Object arg) {
-		if(o instanceof BaseDatabase && "CLOSE".equals(arg)){
-			if(dbs !=null){
-				for (String dbName : dbs.keySet()){
-					BaseDatabase db = dbs.get(dbName);
-					if(db  == o){
-						dbs.remove(o);
-						System.err.println("Closed database is " + dbName);
-					}
-				}
-			}
-		}
-		
-	}
+
 	
 
-	public void close(String dbName){
-		BaseDatabase db = dbs.get(dbName);
-		if(db!=null){
-			db.closeCon();
-			dbs.remove(dbName);
-		}
-	}
 }
 
 

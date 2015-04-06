@@ -1,22 +1,17 @@
 package sam.bee.oa.db;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Vector;
 
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
-import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -24,7 +19,7 @@ import org.apache.log4j.PropertyConfigurator;
 import sam.bee.oa.sql.core.ServiceFactory;
 import sam.bee.oa.sql.database.BaseDatabase;
 import sam.bee.oa.sql.database.Callback;
-import sam.bee.oa.sql.database.DatabaseConnection;
+import sam.bee.oa.sql.database.DatabaseConfig;
 import sam.bee.oa.sql.database.DatabaseFactory;
 import sam.bee.oa.sql.database.DatabaseService;
 import static sambee.utils.ConfigUtils.*;
@@ -51,7 +46,7 @@ public class Mssql2MssqlScript implements IDatabaseAdapter{
 		PropertyConfigurator.configure(LOG4J_PROPERTIES);		
 		Map<String,String> config = loadConfig(PROPERTIES_FILE, getClass().getName());
 		
-		DatabaseFactory.getInstance().registerDatabase(SRC_DTATABASE, new BaseDatabase(new DatabaseConnection(SRC_DTATABASE, config)));
+		DatabaseFactory.getInstance().registerDatabase(SRC_DTATABASE, new BaseDatabase(new DatabaseConfig(SRC_DTATABASE, config)));
 		
 		//General sql file.
 		final OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(GENERAL_TABLES_FILES), "UTF-8");
