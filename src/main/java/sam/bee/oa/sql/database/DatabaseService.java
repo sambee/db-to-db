@@ -31,7 +31,6 @@ public interface DatabaseService {
 	/**
 	 * get page info
 	 * 
-	 * @param type
 	 * @param tableName
 	 * @param start
 	 * @param pageSize
@@ -44,7 +43,7 @@ public interface DatabaseService {
 	 * 
 	 * @return
 	 */
-	List<Map<String, Object>> getAllTables(String dbName);
+	List<Map<String, String>> getAllTables();
 
 	/**
 	 * 

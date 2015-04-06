@@ -40,7 +40,15 @@ public class GetPage extends BaseService implements MethodExecutor {
 
 		PageModel page = new PageModel();
 		if(countObjs.size()>0){
-			Integer count = Integer.valueOf((Integer)countObjs.get(0).get("ret"));
+			Object ret = countObjs.get(0).get("RET");
+			Long count = 0L;
+			if(ret instanceof Integer){
+				count = Long.valueOf((Integer)ret);
+			}
+			if(ret instanceof Long){
+				count = Long.valueOf((Long)ret);
+			}
+			
 			
 			if(pageSize>MAX_ROW){
 				pageSize = MAX_ROW;

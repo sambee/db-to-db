@@ -5,3 +5,9 @@
 *.zip
 *.properties
 /release
+*.7z
+data
+*.zip
+/mssql-to-mssqlSQL
+/target
+.idea

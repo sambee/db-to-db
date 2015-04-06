@@ -10,7 +10,7 @@ public class Close extends BaseService implements MethodExecutor{
 
 	@Override
 	public Object execute(Map params) throws Throwable {
-		closeDatabase();
+
 		return null;
 	}
 

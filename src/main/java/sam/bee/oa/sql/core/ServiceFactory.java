@@ -9,30 +9,37 @@ import java.util.Map;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
+import sam.bee.oa.sql.database.BaseService;
+
 import static sam.bee.oa.sql.utils.StringUtil.toJavaNaming;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ServiceFactory {
 
-	private static LinkedHashMap<Class, Object> services = new LinkedHashMap<Class, Object>();
-	
-	private static Object createProxy(Class targetClass) {
+	private static LinkedHashMap<String, LinkedHashMap<Class, Object>> sessions = new LinkedHashMap();
+
+
+	private static Object createProxy(Class targetClass, String session) {
 		Enhancer enhancer = new Enhancer();
 		enhancer.setSuperclass(targetClass);
-		enhancer.setCallback(new ServiceMethodInterceptor(targetClass));
+		enhancer.setCallback(new ServiceMethodInterceptor(targetClass, session));
 		return enhancer.create();
 	}
 	
-	public static <T> T getService(Class<T> cls){
+	public static <T> T getService(String session, Class<T> cls){
 		
 		Object obj = null;
-		if(services == null){
-			services = new LinkedHashMap<Class, Object>();
+		if(sessions == null){
+            sessions = new LinkedHashMap();
 		}
-		
+        LinkedHashMap<Class, Object> services =  sessions.get(session);
+        if(services == null){
+            services = new LinkedHashMap<Class, Object>();
+            sessions.put(session , services);
+        }
 		obj = services.get(cls);
 		if(obj==null){
-			obj = (T)createProxy(cls);
+			obj = (T)createProxy(cls, session);
 			services.put(cls, obj);
 		}
 		
@@ -45,8 +52,11 @@ public class ServiceFactory {
 class ServiceMethodInterceptor implements MethodInterceptor {
 
 	Class serviceClass;
-	public ServiceMethodInterceptor(Class cls){
+    String session;
+	public ServiceMethodInterceptor(Class cls, String session){
 		this.serviceClass = cls;
+
+        this.session = session;
 	}
 	
 	public Object intercept(Object object, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
@@ -66,9 +76,11 @@ class ServiceMethodInterceptor implements MethodInterceptor {
 
 			Constructor constructor = clsObj.getConstructor(method.getParameterTypes());
 			MethodExecutor obj = (MethodExecutor)constructor.newInstance(args);
+            ((BaseService) obj).setDatabaseName(session);
 			Map params = new HashMap(args.length);
 			params.put("args", args);
 			//System.out.println(">>>MethodInterceptor ending...");
+
 			return obj.execute(params);		
 		}
 		Object result = methodProxy.invokeSuper(object, args);

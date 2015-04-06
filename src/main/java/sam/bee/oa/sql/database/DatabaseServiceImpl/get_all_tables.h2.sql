@@ -1,0 +1,1 @@
+SELECT TABLE_NAME FROM information_schema.tables WHERE SQL is not null

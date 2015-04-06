@@ -57,8 +57,8 @@ public class ExportTable extends BaseService implements MethodExecutor{
 		 isDropTableIfExist,	
 		 isCopyData);
 		
-		DatabaseService service = (DatabaseService)ServiceFactory.getService(DatabaseService.class);
-		GeneralScriptService gen = (GeneralScriptService)ServiceFactory.getService(GeneralScriptService.class);
+		DatabaseService service = (DatabaseService)ServiceFactory.getService("", DatabaseService.class);
+		GeneralScriptService gen = (GeneralScriptService)ServiceFactory.getService("", GeneralScriptService.class);
 		
 		if(isDropTableIfExist){
 			String sql = gen.dropTable(outputType, tableName);

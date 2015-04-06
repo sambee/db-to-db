@@ -25,7 +25,7 @@ public class GetMetasTest {
 
 	@Test
 	public void test() {
-		DatabaseService service = (DatabaseService)ServiceFactory.getService(DatabaseService.class);
+		DatabaseService service = (DatabaseService)ServiceFactory.getService("",DatabaseService.class);
 		service.getMetas(dbName,"system_users");
 		
 		

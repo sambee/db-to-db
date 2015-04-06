@@ -2,6 +2,7 @@ package sam.bee.oa.db;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -16,46 +17,34 @@ import sam.bee.oa.sql.database.DatabaseService;
 import sam.bee.oa.sql.database.asscss.AsscssDatabase;
 import sam.bee.oa.sql.database.model.PageModel;
 
-public class MsDBToAccessDB {
+import com.healthmarketscience.jackcess.Database;
+import com.healthmarketscience.jackcess.DatabaseBuilder;
+import com.healthmarketscience.jackcess.Table;
+
+import static sambee.utils.ConfigUtils.*;
+public class MsDBToAccessDB implements IDatabaseAdapter{
 	private static final Logger log = Logger.getLogger(MsDBToAccessDB.class);
 	
-	public static void main(String[] args) throws Exception {
+	
+	private static void validate(DatabaseService service, Properties prop) throws IOException{
+		String src = "src";
+		String desc = "desc";
 		
-		final DatabaseService service = (DatabaseService) ServiceFactory.getService(DatabaseService.class);
+		String url = (String)prop.get(desc + ".jdbc.url");
+		String mdb = url.substring(url.lastIndexOf("/")+1);
+		File dbFile = new File(mdb);
+		assert(dbFile.exists());
+		Database db = new DatabaseBuilder(dbFile).setFileFormat(Database.FileFormat.V2000).open();
 		
-		try{
-		FileInputStream fis = new FileInputStream("mssql_to_access.properties");
-		Properties prop = new Properties();
-		prop.load(fis);
-		
-		msdbToAsscesDB(service, prop);
-//		validate(service, prop);
+		Table table = db.getTable("AMS_SYS_PRINT_TEMPLATE");
+		for (com.healthmarketscience.jackcess.Row row : table) {
+			String data = (String)row.get("REPORT_TEMPLATE");
+			if(data!=null){
+				System.out.println(data.length());
+			}
+			
 		}
-		catch(Exception e){
-			log.error("",e);
-		}
-		System.exit(0);
 	}
-//	
-//	private static void validate(DatabaseService service, Properties prop) throws IOException{
-//		String src = "src";
-//		String desc = "desc";
-//		
-//		String url = (String)prop.get(desc + ".jdbc.url");
-//		String mdb = url.substring(url.lastIndexOf("/")+1);
-//		File dbFile = new File(mdb);
-//		assert(dbFile.exists());
-//		Database db = new DatabaseBuilder(dbFile).setFileFormat(Database.FileFormat.V2000).open();
-//		
-//		Table table = db.getTable("AMS_SYS_PRINT_TEMPLATE");
-//		for (Row row : table) {
-//			String data = (String)row.get("REPORT_TEMPLATE");
-//			if(data!=null){
-//				System.out.println(data.length());
-//			}
-//			
-//		}
-//	}
 	
 	
 	private static List<Map<String, Object>> getSrcInfo(AsscssDatabase accessDB, DatabaseService db, String srcDB, String tableName){
@@ -82,13 +71,13 @@ public class MsDBToAccessDB {
 		}while(start<page.getCount());
 	}
 	
-	private static void msdbToAsscesDB(DatabaseService service, Properties prop) throws Exception{
+	private static void msdbToAsscesDB(DatabaseService service, Map<String,String> config) throws Exception{
 		
 		
 		String src = "src";
 		String desc = "desc";
 		
-		String url = (String)prop.get(desc + ".jdbc.url");
+		String url = (String)config.get(desc + ".jdbc.url");
 		String mdb = url.substring(url.lastIndexOf("/")+1);
 		File dbFile = new File(mdb);
 		if(dbFile.exists()){
@@ -104,13 +93,13 @@ public class MsDBToAccessDB {
 		}
 		
 		//Register src database.
-		DatabaseConnection srcDB = new DatabaseConnection(src, prop);
+		DatabaseConnection srcDB = new DatabaseConnection(src, config);
 		DatabaseFactory.getInstance().registerDatabase(src, new BaseDatabase(srcDB));
 		
 		//create access file.
 		AsscssDatabase accessDB = new AsscssDatabase(dbFile);
 
-		for (Object tableKey : prop.keySet()) {
+		for (Object tableKey : config.keySet()) {
 			if (String.valueOf(tableKey).startsWith("table.")) {
 				String tableName = String.valueOf(tableKey).substring("table.".length());
 				 List<Map<String, Object>> fieldsInfo = getSrcInfo(accessDB, service, src, tableName);
@@ -120,6 +109,28 @@ public class MsDBToAccessDB {
 		}
 		
 		accessDB.close();
+	}
+
+
+	@Override
+	public Object parse(Object... params) throws Exception {
+		String[] args = (String[])params;
+		
+		final DatabaseService service = (DatabaseService) ServiceFactory.getService("", DatabaseService.class);
+		
+		try{
+//		FileInputStream fis = new FileInputStream("mssql_to_access.properties");
+//		Properties prop = new Properties();
+//		prop.load(fis);
+		
+		Map<String,String> config = loadConfig(args[0], getClass().getName());	
+		msdbToAsscesDB(service, config);
+//		validate(service, prop);
+		}
+		catch(Exception e){
+			log.error("",e);
+		}
+		return null;
 	}
 
 

@@ -3,11 +3,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
+	<!-- parent>
 		<groupId>sam.bee.oa</groupId>
 		<artifactId>sam-bee-oa</artifactId>
 		<version>1.0-SNAPSHOT</version>
-	</parent>
+	</parent -->
 	<groupId>sam.bee.oa</groupId>
 	<artifactId>db-to-db</artifactId>
 	<version>1.0-SNAPSHOT</version>
@@ -34,8 +34,9 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>1.3.173</version>
+			<version>1.4.180</version>
 		</dependency>
+
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -183,7 +184,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>sam.bee.oa.db.Mssql2MssqlScript</mainClass>
+							<mainClass>sam.bee.oa.App</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

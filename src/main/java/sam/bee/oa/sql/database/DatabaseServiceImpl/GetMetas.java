@@ -60,7 +60,7 @@ public class GetMetas extends BaseService implements MethodExecutor {
 //			  out.println("");
 			  Map meta = new HashMap();
 			  meta.put("COL_NAME", colName);
-			  meta.put("COL_TYPE", typeName);
+			  meta.put("COL_TYPE", typeName.toLowerCase());
 			  meta.put("COL_LEN", colLen);
 			  meta.put("COL_SCALE", scale);
 			  meta.put("COL_CLASS", clsName);

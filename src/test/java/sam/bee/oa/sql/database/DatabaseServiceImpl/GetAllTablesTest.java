@@ -21,12 +21,12 @@ public class GetAllTablesTest {
 	String dbName = "mssql";
 	@Test
 	public void test() {
-		DatabaseService service = (DatabaseService)ServiceFactory.getService(DatabaseService.class);
+		DatabaseService service = (DatabaseService)ServiceFactory.getService("",DatabaseService.class);
 		
-		List<Map<String, Object>> list = service.getAllTables(dbName);
+		List<Map<String, String>> list = service.getAllTables();
 		
 		List<String> stringList = new ArrayList();
-		for(Map<String, Object> m : list){
+		for(Map<String, String> m : list){
 			stringList.add(m.get("name")+ "=create");
 		}
 	

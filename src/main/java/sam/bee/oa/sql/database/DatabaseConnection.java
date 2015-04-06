@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -27,25 +28,24 @@ public class DatabaseConnection {
 	String jdbc;
 	String userName;
 	String password;
-	String type;
 	String driverClass;
 	Connection conn;
+
+
 	public DatabaseConnection(String type, String driverClass, String jdbc,
 			String userName, String password, String dbName) {
 		this.dbName = dbName;
 		this.jdbc = jdbc;
 		this.userName = userName;
 		this.password = password;
-		this.type = type;
 	}
 
-	public DatabaseConnection(String dbName, Properties p) {
+	public DatabaseConnection(String dbName, Map<String,String> config) {
 		this.dbName = dbName;
-		this.password = p.getProperty(dbName + ".jdbc.password");
-		this.userName = p.getProperty(dbName + ".jdbc.user");
-		this.jdbc = p.getProperty(dbName + ".jdbc.url");
-		this.type = p.getProperty(dbName + ".jdbc.type");
-		this.driverClass = p.getProperty(dbName + ".jdbc.class");
+		this.password = config.get( "password");
+		this.userName = config.get( "user");
+		this.jdbc = config.get( "jdbc");
+		this.driverClass = config.get( "driver");
 
 	}
 
@@ -71,14 +71,6 @@ public class DatabaseConnection {
 		return password;
 	}
 
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this. type = type;
-	}
-	
 	public String getDBName() {
 		return this.dbName;
 	}
@@ -89,8 +81,28 @@ public class DatabaseConnection {
 	}
 	
 	public void close() throws SQLException{
-		conn.close();
-		conn = null;
+		if(conn!=null){
+			conn.close();
+			conn = null;	
+		}
 	}
-	 
+
+    public String getType(){
+        if(driverClass==null){
+            return null;
+        }
+        if(driverClass.contains("h2")){
+            return "h2";
+        }
+        if(driverClass.contains("miracle")){
+            return "miracle";
+        }
+        if(driverClass.contains("oracle")){
+            return "oracle";
+        }
+        if(driverClass.contains("mysql")){
+            return "mysql";
+        }
+        return null;
+    }
 }

@@ -14,12 +14,14 @@ public class BaseDatabase extends Observable{
 	private static Logger log = Logger.getLogger(BaseDatabase.class);
 	private final static long TIMEOUT = 30000;
 	private DatabaseConnection conn = null;
-	
+	private  Thread monThread;
 	public BaseDatabase(DatabaseConnection conn) throws SQLException, ClassNotFoundException{		
 		setConn(conn);
 		Monitor mon = new Monitor(TIMEOUT);
+		monThread = new Thread(mon);
+		monThread.start();
 		addObserver(mon);
-		new Thread(mon).start();
+		
 	}
 	
 	public boolean update(String sql)throws SQLException, ClassNotFoundException {
@@ -71,17 +73,20 @@ public class BaseDatabase extends Observable{
 		if (conn != null && !conn.isClosed()){			
 				conn.close();
 				conn = null;
+				if(monThread!=null){
+					monThread.interrupt();
+					monThread =null;
+				}
+				System.out.println("Database closed.");
+				
 		}
 		} catch (Exception e) {e.printStackTrace();}
 	}
 	
 	public String getType(){
-		return conn.getType();
+       return conn.getType();
 	}
 	
-	public void setType(String type){
-		this.conn.setType(type);;
-	}
 }
 
 class Monitor implements Runnable,Observer{
@@ -111,7 +116,7 @@ class Monitor implements Runnable,Observer{
 
 			try {
 				Thread.sleep(5000);
-				System.out.println("Will be exit applicaton:" + (timeout - (System.currentTimeMillis() - lastupdated)));
+				//System.out.println("Will be exit applicaton:" + (timeout - (System.currentTimeMillis() - lastupdated)));
 			} catch (InterruptedException e) {}
 		}
 		

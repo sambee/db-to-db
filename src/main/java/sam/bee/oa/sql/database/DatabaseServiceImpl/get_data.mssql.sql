@@ -1,1 +1,1 @@
-select top #{pageSize} * from ${tableName} where id not in (select top #{pageStart} id  from  ${tableName})
+select top #{pageSize} * from ${tableName} <#if id?? >where id not in (select top #{pageStart} id  from  ${tableName})</#if>

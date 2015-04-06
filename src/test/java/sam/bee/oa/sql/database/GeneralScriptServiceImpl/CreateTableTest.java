@@ -24,7 +24,7 @@ public class CreateTableTest {
 	@Test
 	public void test() {
 		
-		GeneralScriptService service = (GeneralScriptService)ServiceFactory.getService(GeneralScriptService.class);
+		GeneralScriptService service = (GeneralScriptService)ServiceFactory.getService("",GeneralScriptService.class);
 		
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		String sql  = service.createTable(dbName, outputType, "system_users", list);

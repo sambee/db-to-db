@@ -33,7 +33,7 @@ public class MSDB2MSDBTest {
 	
 	private void doAction(String srcName, final String descDB)throws Exception{
 
-		final DatabaseService db = (DatabaseService) ServiceFactory.getService(DatabaseService.class);
+		final DatabaseService db = (DatabaseService) ServiceFactory.getService("",DatabaseService.class);
 		
 		//load configuration 1.
 		InputStream in = ClassLoader.getSystemResourceAsStream("gen_database.properties");
@@ -45,7 +45,7 @@ public class MSDB2MSDBTest {
 		Properties p2 = new Properties();
 		p2.load(in2);
 		
-		DatabaseService service = (DatabaseService)ServiceFactory.getService(DatabaseService.class);
+		DatabaseService service = (DatabaseService)ServiceFactory.getService("",DatabaseService.class);
 		
 		Callback callback = new Callback() {
 

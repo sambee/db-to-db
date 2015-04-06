@@ -53,9 +53,10 @@ public class GenernalCreateAllTableSqlTest {
 		BaseDatabase db = DatabaseFactory.getInstance().getDatabase(dbName);
 
 		
-		DatabaseService service = (DatabaseService)ServiceFactory.getService(DatabaseService.class);
+		DatabaseService service = (DatabaseService)ServiceFactory.getService("",DatabaseService.class);
 
-		List<Map<String, Object>> names = service.getAllTables(dbName);
+
+		List<Map<String, String>> names = service.getAllTables();
 		
 		
 		Callback callback = new Callback(){
@@ -69,7 +70,7 @@ public class GenernalCreateAllTableSqlTest {
 			
 		};		
 		
-		for(Map<String, Object> name : names){
+		for(Map<String, String> name : names){
 			try{
 			String tableName = (String)name.get("name");
 			System.out.println(tableName);

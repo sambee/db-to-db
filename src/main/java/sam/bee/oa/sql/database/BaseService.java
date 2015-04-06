@@ -21,9 +21,12 @@ import sam.bee.oa.sql.utils.JdbcConverter;
 public abstract class BaseService {
 
 	protected final static Logger log = Logger.getLogger(BaseService.class);
-		
-	BaseDatabase db;
-	
+    protected String dbName;
+
+
+    public void setDatabaseName(String dbName){
+        this.dbName = dbName;
+    }
 	class SQLEntity{
 		public String sql;
 		public List<Object> params;
@@ -42,6 +45,7 @@ public abstract class BaseService {
 	}
 	
 	public BaseDatabase getDB(String dbName) throws SQLException, IOException{
+        BaseDatabase db = DatabaseFactory.getInstance().getDatabase(dbName);
 		if(db==null){
 			db = DatabaseFactory.getInstance().getDatabase(dbName);
 		}
@@ -51,15 +55,6 @@ public abstract class BaseService {
 		return db;
 	}
     
-	public BaseDatabase set(BaseDatabase db){
-		if(db==null){
-			this.db = db;
-			
-		}
-		return db;
-	}
-	
-	
     protected SQLEntity getSqlEntity(String template, Map params, Class owner) throws ParaseException{
     	SQLEntity ety = new SQLEntity();  
     	LinkedList<Object> list =new LinkedList<Object>();
@@ -108,11 +103,5 @@ public abstract class BaseService {
     	return getDB(dbName).getType();
     	
     }
-    
-    protected void closeDatabase(){
-    	if(db!=null)
-    		db.closeCon();
-    }
-    
-   	
+
 }

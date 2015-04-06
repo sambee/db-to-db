@@ -13,8 +13,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Properties;
+import java.util.*;
 
 import javax.imageio.stream.FileImageInputStream;
 
@@ -62,10 +61,15 @@ public class ImportTableTest {
 	     
 		 String deployPath = p.getProperty("deploy.path");
 
-	     
-	     
+
+        Map map = new HashMap();
+        Enumeration e =  p.propertyNames();
+       while(e.hasMoreElements()){
+           String name = (String) e.nextElement();
+            map.put(name, p.getProperty(name));
+       }
 		 //init jdbc
-		 DatabaseConnection descConn = new DatabaseConnection(descDBName, p);
+		 DatabaseConnection descConn = new DatabaseConnection(descDBName, map);
 	     
 		 String deployFile = deployPath + "/"+ descConn.getType() + "/" +  dbName + "_" + date;   
 		 String jdbc = getJdbcHeader() + deployFile; 
@@ -98,7 +102,7 @@ public class ImportTableTest {
 		BufferedReader file = null;
 		
 		DatabaseService service = (DatabaseService) ServiceFactory
-				.getService(DatabaseService.class);
+				.getService("",DatabaseService.class);
 		
 		for (Object table : p.keySet()) {
 			System.out.println("Import " + table);

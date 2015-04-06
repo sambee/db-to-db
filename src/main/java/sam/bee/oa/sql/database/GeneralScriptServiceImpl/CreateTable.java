@@ -7,7 +7,9 @@ import java.util.Map;
 
 import sam.bee.oa.sql.core.MethodExecutor;
 import sam.bee.oa.sql.core.ServiceFactory;
+import sam.bee.oa.sql.database.BaseDatabase;
 import sam.bee.oa.sql.database.BaseService;
+import sam.bee.oa.sql.database.DatabaseFactory;
 import sam.bee.oa.sql.database.DatabaseService;
 import sam.bee.oa.sql.freemarker.DefaultSql;
 
@@ -29,9 +31,15 @@ public class CreateTable extends BaseService implements MethodExecutor {
 
 	@Override
 	public Object execute(Map params) throws Throwable {		
-		DatabaseService service = (DatabaseService)ServiceFactory.getService(DatabaseService.class);
+		DatabaseService service = (DatabaseService)ServiceFactory.getService("", DatabaseService.class);
+
+		BaseDatabase srcDB = DatabaseFactory.getInstance().getDatabase(srcDbName);
 		Map<String, Object> myParams = new HashMap<String, Object>();
 		List<Map<String, Object>> fields = service.getMetas(srcDbName, tableName);
+		
+		if("mssql".equals(outputType) && "h2".equals(srcDB.getType())){
+			fields = new H2ToMssqlAdapter().paraseFields(fields);
+		}
 		myParams.put("tableName", tableName);
 		myParams.put("fields", fields);
 		return new DefaultSql().convert("create_tables." + outputType + ".sql", myParams, new ArrayList(), getClass());

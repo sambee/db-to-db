@@ -20,7 +20,7 @@ public class GetPageTest {
 	String dbName = "mssql";
 	@Test
 	public void test() {
-		DatabaseService db = (DatabaseService)ServiceFactory.getService(DatabaseService.class);
+		DatabaseService db = (DatabaseService)ServiceFactory.getService("",DatabaseService.class);
 	
 		Map paraments = new HashMap();
 		paraments.put("tableName", "ams_sys_query");

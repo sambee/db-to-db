@@ -1,0 +1,1 @@
+select top #{pageSize} * from ${tableName} where id not in (select top #{pageStart} id  from  ${tableName})

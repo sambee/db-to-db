@@ -50,6 +50,12 @@ public class CreateRecord extends BaseService implements MethodExecutor {
 			else if(obj  instanceof Integer || obj  instanceof Long || obj  instanceof Float || obj  instanceof Double || obj instanceof BigDecimal ){
 				types.add("number");
 			}
+			else if(obj instanceof org.h2.jdbc.JdbcClob){
+				types.add("image");
+			}
+			else if(obj instanceof org.h2.jdbc.JdbcBlob){
+				types.add("image");
+			}			
 			else {
 				if(obj!=null){
 					throw new GeneralException("Parse object type error" + obj.getClass());

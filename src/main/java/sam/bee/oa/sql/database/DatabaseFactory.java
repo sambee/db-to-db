@@ -73,7 +73,12 @@ public class DatabaseFactory implements Observer{
 		getDBS().put(dbName, db);		
 		
 	}
-	
+
+    public void registerDatabase(String dbName, Map config ) throws SQLException, ClassNotFoundException {
+        getDBS().put(dbName, new BaseDatabase(new DatabaseConnection(dbName, config)));
+
+    }
+
 	private Map<String, BaseDatabase> getDBS(){
 		if (dbs == null) {
 			dbs = new HashMap<String, BaseDatabase>();
@@ -98,6 +103,13 @@ public class DatabaseFactory implements Observer{
 	}
 	
 
+	public void close(String dbName){
+		BaseDatabase db = dbs.get(dbName);
+		if(db!=null){
+			db.closeCon();
+			dbs.remove(dbName);
+		}
+	}
 }
 
 

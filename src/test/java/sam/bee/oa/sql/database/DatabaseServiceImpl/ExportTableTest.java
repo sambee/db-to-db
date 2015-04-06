@@ -56,7 +56,7 @@ public class ExportTableTest {
 	     Properties p = new Properties();
 	     p.load(new BufferedReader(new InputStreamReader(in, "UTF-8")));
 	       
-		DatabaseService service = (DatabaseService)ServiceFactory.getService(DatabaseService.class);
+		DatabaseService service = (DatabaseService)ServiceFactory.getService("",DatabaseService.class);
 		
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy_MM_dd");
 		
