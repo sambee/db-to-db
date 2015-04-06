@@ -4,11 +4,7 @@ package sam.bee.oa.sql.database;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 
@@ -92,16 +88,9 @@ public abstract class BaseService {
     public List<Map<String,Object>> sql(String dbName, String templateName, Map params, Class owner) throws Exception{
     	SQLEntity ety =getSqlEntity(templateName, params, owner);
     	//log.info(ety.sql);
-//    	ResultSet rs = getDB(dbName).getResultSet(ety.sql, ety.params.toArray(new Object[ety.params.size()]));
-//    	ArrayList<Map<String,Object>> list =null;
-//    	try{
-//    		list = JdbcConverter.resultSetToList(rs);
-//    	}
-//    	finally{
-//    		closeRs(rs);
-//
-//    	}
-    	return getDB(dbName).getList(ety.sql, ety.params.toArray(new Object[ety.params.size()]));
+		Object[] args = ety.params.toArray(new Object[ety.params.size()]);
+    	return getDB(dbName).getList(ety.sql, args);
+
     }
   
     	

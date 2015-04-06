@@ -22,11 +22,14 @@ public class BaseDatabase {
 	
 	public boolean update(String sql)throws SQLException, ClassNotFoundException {
 		Statement stmt = getConnection().createStatement();
-		boolean ret;
+		boolean ret = true;
 
 		try {
 			log.info(sql);
 			ret = stmt.execute(sql);
+		}
+		catch (Exception ex){
+			log.error(ex.getMessage(), ex);
 		}
 		finally {
 			if(stmt!=null){

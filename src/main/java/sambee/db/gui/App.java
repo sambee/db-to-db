@@ -249,6 +249,13 @@ public class App {
 
                     descService.executeSQL(createSQL);
 
+                    descService.getData(dataModel.getTableName(), new Callback() {
+                        @Override
+                        public boolean execute(Map<String, Object> aData) throws Throwable {
+                            return false;
+                        }
+                    });
+
                 }
                 if(dataModel.isExportData()){
                     log.info("Copy Data:" + dataModel.getTableName());
@@ -258,7 +265,7 @@ public class App {
                         public boolean execute(Map<String, Object> aData) throws Throwable {
                             aData.remove("RN");
                             descService.saveData(mTableName, aData);
-                            return false;
+                            return true;
                         }
                     });
                 }
