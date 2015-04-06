@@ -2,6 +2,7 @@ package sambee.db.gui;
 
 import sam.bee.oa.sql.core.ServiceFactory;
 import sam.bee.oa.sql.database.BaseDatabase;
+import sam.bee.oa.sql.database.Callback;
 import sam.bee.oa.sql.database.DatabaseFactory;
 import sam.bee.oa.sql.database.DatabaseService;
 import sambee.utils.ConfigUtils;
@@ -9,6 +10,8 @@ import sambee.utils.ConfigUtils;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -55,6 +58,31 @@ public class App {
         form.getLoadButton().addActionListener(actionListener);
         form.getSettingsButton().addActionListener(actionListener);
         form.getExecuteButton().addActionListener(actionListener);
+
+        form.getTable().addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int cell = form.getTable().getSelectedColumn();
+                int row = form.getTable().getSelectedRow();
+                TableModel  tableModel = (TableModel) form.getTable().getModel();
+                DataModel dataModel = (DataModel) tableModel.getModelAt(row);
+                dataModel.changeValue(cell);
+                ((TableModel) form.getTable().getModel()).fireTableCellUpdated(row, cell);
+            }
+        });
+
+
+        //table header event
+        form.getTable().getTableHeader().addMouseListener(new MouseAdapter()  //表头添加事件
+        {
+            public void mouseClicked(MouseEvent e) {
+                int tableColumn = form.getTable().columnAtPoint(e.getPoint());//获取点击的列
+//                System.out.println(tableColumn);
+                ((TableModel) form.getTable().getModel()).changeAllValue(tableColumn);
+                ((TableModel) form.getTable().getModel()).fireTableCellUpdated(tableColumn,tableColumn);
+            }
+        });
+
+        form.getExecuteButton().setEnabled(false);
     }
 
 
@@ -153,19 +181,78 @@ public class App {
             e.printStackTrace();
         }
 
+        if(form.getTable().getModel().getRowCount()>0){
+            form.getExecuteButton().setEnabled(true);
+        }
+        else{
+            form.getExecuteButton().setEnabled(false);
+        }
     }
 
     public static void execute(MainForm form){
-        String driver = form.getSrcDriver().getText();
-        String jdbc = form.getSrcJDBC().getText();
-        String user = form.getSrcUser().getText();
-        String password = form.getSrcPassword().getText();
+        final String driver = form.getSrcDriver().getText();
+        final String jdbc = form.getSrcJDBC().getText();
+        final String user = form.getSrcUser().getText();
+        final  String password = form.getSrcPassword().getText();
 
 
-        String descDriver = form.getDescDriver().getText();
-        String descJdbc = form.getDescJDBC().getText();
-        String descUser = form.getDescUser().getText();
-        String descPassword = form.getDescPassword().getText();
+        final String descDriver = form.getDescDriver().getText();
+        final  String descJdbc = form.getDescJDBC().getText();
+        final String descUser = form.getDescUser().getText();
+        final String descPassword = form.getDescPassword().getText();
+
+        Map<String, String> map = new HashMap<String, String>(){{
+            put("driver", driver);
+            put("jdbc",jdbc);
+            put("user",user);
+            put("password", password);
+
+        }};
+
+        Map<String, String> desc = new HashMap<String, String>(){{
+            put("driver", driver);
+            put("jdbc",jdbc);
+            put("user",user);
+            put("password", password);
+
+        }};
+
+        //copy data to the target database.
+        try {
+            DatabaseFactory.getInstance().registerDatabase("src", map);
+            DatabaseFactory.getInstance().registerDatabase("desc", desc);
+
+            DatabaseService srcService = ServiceFactory.getService("src", DatabaseService.class);
+            DatabaseService descService = ServiceFactory.getService("desc", DatabaseService.class);
+            TableModel table =(TableModel) form.getTable().getModel();
+            List<DataModel> tableInfo = table.getData();
+            DataModel dataModel;
+            for(int i=0;i<tableInfo.size();i++){
+
+                dataModel = tableInfo.get(i);
+                if(dataModel.isCreateTable()){
+                    //table name;
+                    String createSQL = srcService.createTableSql(descService.getDatabaseType(), dataModel.getTableName());
+                    descService.executeSQL(createSQL);
+
+                }
+                if(dataModel.isExportData()){
+                    //table name;
+                    srcService.getData(dataModel.getTableName(), new Callback() {
+                        @Override
+                        public boolean execute(Map<String, Object> aData) throws Throwable {
+                            return false;
+                        }
+                    });
+                }
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public static String value(String v, String v2){

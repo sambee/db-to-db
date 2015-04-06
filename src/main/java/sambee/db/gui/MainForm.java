@@ -5,6 +5,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
 import javax.swing.*;
+import javax.swing.table.TableColumn;
+
 import com.jgoodies.forms.layout.*;
 /*
  * Created by JFormDesigner on Sat Apr 04 13:48:28 CST 2015
@@ -199,21 +201,27 @@ public class MainForm extends JFrame {
 
     public void onStart(){
 
-        tblTables.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-               int x = tblTables.getSelectedColumn();
-                int y = tblTables.getSelectedRow();
-                System.out.println(x + " " + y);
-            }
-        });
-
 
 //        for(int i=0;i<10;i++) {
 //            list.add(new DataModel("tablename", true, true));
 //        }
 
-        TableModel tableModel = new TableModel();
-        tableModel.setData(new Vector<DataModel>());
-        tblTables.setModel(tableModel);
+		TableModel tableModel = new TableModel();
+		tableModel.setData(new Vector<DataModel>());
+		tblTables.setModel(tableModel);
+
+		TableColumn aColumn   =   tblTables.getColumnModel().getColumn(1);
+		aColumn.setCellEditor(tblTables.getDefaultEditor(Boolean.class));
+		aColumn.setCellRenderer(tblTables.getDefaultRenderer(Boolean.class));
+
+
+		aColumn   =   tblTables.getColumnModel().getColumn(2);
+		aColumn.setCellEditor(tblTables.getDefaultEditor(Boolean.class));
+		aColumn.setCellRenderer(tblTables.getDefaultRenderer(Boolean.class));
+
+		aColumn   =   tblTables.getColumnModel().getColumn(3);
+		aColumn.setCellEditor(tblTables.getDefaultEditor(Boolean.class));
+		aColumn.setCellRenderer(tblTables.getDefaultRenderer(Boolean.class));
+
     }
 }

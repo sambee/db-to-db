@@ -22,11 +22,21 @@ public abstract class BaseService {
 
 	protected final static Logger log = Logger.getLogger(BaseService.class);
     protected String dbName;
-
+	protected DatabaseService databaseService;
+	protected GeneralScriptService generalScriptService;
 
     public void setDatabaseName(String dbName){
         this.dbName = dbName;
     }
+
+	public void setDatabaseService(){
+		this.databaseService = databaseService;
+	}
+
+	public void setGeneralScriptService(){
+		this.generalScriptService = generalScriptService;
+	}
+
 	class SQLEntity{
 		public String sql;
 		public List<Object> params;
@@ -96,7 +106,7 @@ public abstract class BaseService {
     }
   
     	
-    protected String getDatabaseType(String dbName) throws Exception{    	
+    protected String getDatabaseType() throws Exception{
     	if(getDB(dbName).getType() == null){
     		throw new NullPointerException("Can not get the db type:" + dbName);
     	}

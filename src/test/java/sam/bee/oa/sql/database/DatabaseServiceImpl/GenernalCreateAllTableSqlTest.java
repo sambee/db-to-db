@@ -62,27 +62,27 @@ public class GenernalCreateAllTableSqlTest {
 		Callback callback = new Callback(){
 
 			@Override
-			public boolean execute(Object obj) throws Exception {
-				System.out.println(obj);
-				out.write(String.valueOf(obj).getBytes());
+			public boolean execute(Map<String, Object> aData) throws Exception {
+				System.out.println(aData);
+				out.write(String.valueOf(aData).getBytes());
 				return true;
 			}
 			
 		};		
 		
-		for(Map<String, String> name : names){
-			try{
-			String tableName = (String)name.get("name");
-			System.out.println(tableName);
-			service.exportTable(dbName, type,	tableName , "all", true, true, false, callback);
-			}
-			catch(JdbcSQLException ex){
-				System.err.println(ex.getMessage());
-			}
-			catch(SQLException ex){
-				System.err.println(ex.getMessage());
-			}
-		}
+//		for(Map<String, String> name : names){
+//			try{
+//			String tableName = (String)name.get("name");
+//			System.out.println(tableName);
+//			service.exportTable(dbName, type,	tableName , "all", true, true, false, callback);
+//			}
+//			catch(JdbcSQLException ex){
+//				System.err.println(ex.getMessage());
+//			}
+//			catch(SQLException ex){
+//				System.err.println(ex.getMessage());
+//			}
+//		}
 		
 		out.close();
 	}

@@ -27,18 +27,18 @@ public class H2ToMssql implements IDatabaseAdapter{
 		List<Map<String, String>> tables = service.getAllTables();
 		
 		
-		for(Map<String, String> m : tables){
-			service.exportTable(srcName, outputType, (String)m.get("TABLE_NAME"), "all", true, true, false, new Callback(){
-
-				@Override
-				public boolean execute(Object obj) throws Throwable {
-					log.info(obj);
-					service.importTable(descName, (String)obj, null);
-					return true;
-				}
-				
-			});	
-		}
+//		for(Map<String, String> m : tables){
+//			service.exportTable(outputType, (String)m.get("TABLE_NAME"), "all", true, true, false, new Callback(){
+//
+//				@Override
+//				public boolean execute(Object obj) throws Throwable {
+//					log.info(obj);
+//					service.importTable(descName, (String)obj, null);
+//					return true;
+//				}
+//
+//			});
+//		}
 		
 		log.info("=========== Create Table ==========");
 		
@@ -53,18 +53,18 @@ public class H2ToMssql implements IDatabaseAdapter{
 		List<Map<String, String>> tables = service.getAllTables();
 		
 		
-		for(Map<String, String> m : tables){
-			service.exportTable(srcName, outputType, (String)m.get("TABLE_NAME"), "all", false, false, true, new Callback(){
-
-				@Override
-				public boolean execute(Object obj) throws Throwable {
-					log.info(obj);
-					service.importTable(descName, (String)obj, null);
-					return true;
-				}
-				
-			});	
-		}
+//		for(Map<String, String> m : tables){
+//			service.exportTable(srcName, outputType, (String)m.get("TABLE_NAME"), "all", false, false, true, new Callback(){
+//
+//				@Override
+//				public boolean execute(Object obj) throws Throwable {
+//					log.info(obj);
+//					service.importTable(descName, (String)obj, null);
+//					return true;
+//				}
+//
+//			});
+//		}
 		log.info("=========== import data ==========");
 		
 		

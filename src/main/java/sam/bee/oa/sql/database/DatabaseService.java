@@ -15,7 +15,7 @@ public interface DatabaseService {
 	 * @param tableName
 	 * @return
 	 */
-	List<Map<String, Object>> getMetas(String dbName, String tableName);
+	List<Map<String, Object>> getMetas( String tableName);
 
 	/**
 	 * get page infomation.
@@ -25,7 +25,7 @@ public interface DatabaseService {
 	 * @param pageSize
 	 * @return
 	 */
-	PageModel getPage(String dbName, Map<String, Object> paraments, long start,
+	PageModel getPage(Map<String, Object> paraments, long start,
 			long pageSize);
 
 	/**
@@ -36,7 +36,7 @@ public interface DatabaseService {
 	 * @param pageSize
 	 * @return
 	 */
-	PageModel getPage(String dbName, String tableName, long start, long pageSize);
+	PageModel getPage(String tableName, long start, long pageSize);
 
 	/**
 	 * Get all tables info.
@@ -45,23 +45,17 @@ public interface DatabaseService {
 	 */
 	List<Map<String, String>> getAllTables();
 
-	/**
-	 * 
-	 * @param data source source name 
-	 * @param output data source name
-	 * @param table
-	 * @param fields
-	 * @param isCreateTable
-	 * @param isDropTableIfExist
-	 * @param isCopyData
-	 * @param callback
-	 * @throws Exception
-	 */
-	void exportTable(String srcDBName, String outputType, String table,
-			String fields, boolean isCreateTable, boolean isDropTableIfExist,
-			boolean isCopyData, Callback callback) throws Exception;
-
-	void importTable(String dbName, String sql, Callback callback);
-
 	void close();
+
+	String dropTableSql(String expectType, String tableName);
+
+	String createTableSql(String expectType, String tableName);
+
+	void getData(String tableName, Callback callback);
+
+	boolean saveData(String tableName, Map data);
+
+	void executeSQL(String sql);
+
+	String getDatabaseType();
 }

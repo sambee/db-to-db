@@ -36,7 +36,31 @@ public class TableModel extends AbstractTableModel {
         }
     }
 
+    public DataModel getModelAt(int rowIndex) {
+        if (rowIndex < data.size()) {
+            return ((DataModel) data.elementAt(rowIndex));
+        } else {
+            return null;
+        }
+    }
+
     public void setData(Vector<DataModel> data){
        this.data = data;
+    }
+
+    public Vector<DataModel> getData(){
+       return data;
+    }
+
+
+    public void changeAllValue(int colIndex){
+        if(data.size()>0){
+            Boolean status  = (Boolean) data.get(0).getValueAt(colIndex);
+            for(int i=0;i<data.size();i++){
+                data.get(i).changeValue(colIndex,!status);
+            }
+        }
+
+
     }
 }

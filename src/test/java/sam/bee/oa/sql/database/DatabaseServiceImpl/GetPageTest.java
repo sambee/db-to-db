@@ -24,7 +24,7 @@ public class GetPageTest {
 	
 		Map paraments = new HashMap();
 		paraments.put("tableName", "ams_sys_query");
-		PageModel page = db.getPage(dbName, paraments, 0, 20);
+		PageModel page = db.getPage(paraments, 0, 20);
 		
 		List<Map<String, Object>> list  = page.getList();
 		System.out.println(list.size());

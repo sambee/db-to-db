@@ -47,29 +47,29 @@ public class MSDB2MSDBTest {
 		
 		DatabaseService service = (DatabaseService)ServiceFactory.getService("",DatabaseService.class);
 		
-		Callback callback = new Callback() {
-
-			@Override
-			public boolean execute(Object sql) throws Exception {
-				log.info(sql);
-				db.importTable(descDB, (String)sql, null);
-				return true;
-			}
-
-		};
-	
-		String descDBType =  p2.getProperty(srcName + ".jdbc.type");
-		
-		for (Object table : p.keySet()) {
-			//System.out.println("Import " + table);
-			if (!String.valueOf(table).startsWith("deploy.")) {
-				
-				String actions = p.getProperty((String)table);
-				boolean copyData = actions.contains("data");	
-				service.exportTable(srcName, descDBType, (String)table, "all", true, true, copyData, callback);
-			}
-			
-		}		
+//		Callback callback = new Callback() {
+//
+//			@Override
+//			public boolean execute(Object sql) throws Exception {
+//				log.info(sql);
+//				db.importTable(descDB, (String)sql, null);
+//				return true;
+//			}
+//
+//		};
+//
+//		String descDBType =  p2.getProperty(srcName + ".jdbc.type");
+//
+//		for (Object table : p.keySet()) {
+//			//System.out.println("Import " + table);
+//			if (!String.valueOf(table).startsWith("deploy.")) {
+//
+//				String actions = p.getProperty((String)table);
+//				boolean copyData = actions.contains("data");
+//				service.exportTable(srcName, descDBType, (String)table, "all", true, true, copyData, callback);
+//			}
+//
+//		}
 
 		log.info("------------------- DONE ------------------------------");
 	}

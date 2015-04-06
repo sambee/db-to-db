@@ -24,17 +24,17 @@ public class CreateRecordTest {
 	@Test
 	public void test() {
 		
-		GeneralScriptService gen = (GeneralScriptService)ServiceFactory.getService("",GeneralScriptService.class);
-		DatabaseService db = (DatabaseService)ServiceFactory.getService("",DatabaseService.class);
-	
-		PageModel page = db.getPage(dbName, "system_components", 0, 20);
-		
-//		Map<String, Object> values = new HashMap<String,Object>();
-		for(Map values :page.getList()){
-			
-			String sql  = gen.createRecord(dbName, outputType , "system_users", values, null);
-			System.out.println(sql);
-		}
+//		GeneralScriptService gen = (GeneralScriptService)ServiceFactory.getService("",GeneralScriptService.class);
+//		DatabaseService db = (DatabaseService)ServiceFactory.getService("",DatabaseService.class);
+//
+//		PageModel page = db.getPage(dbName, "system_components", 0, 20);
+//
+////		Map<String, Object> values = new HashMap<String,Object>();
+//		for(Map values :page.getList()){
+//
+//			String sql  = gen.createRecord(dbName, outputType , "system_users", values, null);
+//			System.out.println(sql);
+//		}
 		
 	}
 	

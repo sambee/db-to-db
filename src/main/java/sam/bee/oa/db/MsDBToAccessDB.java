@@ -48,7 +48,7 @@ public class MsDBToAccessDB implements IDatabaseAdapter{
 	
 	
 	private static List<Map<String, Object>> getSrcInfo(AsscssDatabase accessDB, DatabaseService db, String srcDB, String tableName){
-		return 	db.getMetas(srcDB, tableName);
+		return 	db.getMetas(tableName);
 	}
 	
 	public static void importData(AsscssDatabase accessDB,DatabaseService service, String srcDBName, String tableName)throws Exception{
@@ -58,7 +58,7 @@ public class MsDBToAccessDB implements IDatabaseAdapter{
 		PageModel page;
 		
 		do{
-			page = service.getPage(srcDBName,tableName, start, pageSize);	
+			page = service.getPage(tableName, start, pageSize);
 			start = page.getStart()+page.getPageSize();
 			pageSize = page.getPageSize(); 
 			System.out.println(String.format("Table: %s, Start:%d, size:%d, count:%d, data count:%d", tableName,start, pageSize, page.getCount(), page.getList().size()));

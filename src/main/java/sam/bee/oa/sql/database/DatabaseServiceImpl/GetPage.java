@@ -14,18 +14,16 @@ public class GetPage extends BaseService implements MethodExecutor {
 	Map<String,Object> paraments;
 	long start; 
 	long pageSize;
-	String dbName;
+
 	private static final int MAX_ROW = 1000;
-	public GetPage(String dbName, Map<String,Object> paraments, long start, long pageSize){
-		this.dbName = dbName;
+	public GetPage(Map<String,Object> paraments, long start, long pageSize){
 		this.paraments = paraments;
 		this.start = start;
 		this.pageSize = pageSize;		
 	}
 	
 	@SuppressWarnings("unchecked")
-	public GetPage(String dbName, String tableName, long start, long pageSize){
-		this.dbName = dbName;
+	public GetPage(String tableName, long start, long pageSize){
 		this.paraments = new HashMap();
 		paraments.put("tableName", tableName);
 		this.start = start;
@@ -36,7 +34,7 @@ public class GetPage extends BaseService implements MethodExecutor {
 	public Object execute(Map params) throws Throwable {
 		paraments.put("pageStart", start);
 		
-		List<Map<String,Object>> countObjs = sql(dbName, "get_count." + getDatabaseType(dbName) + ".sql", paraments, getClass());
+		List<Map<String,Object>> countObjs = sql(getDatabaseType(), "get_count." + getDatabaseType() + ".sql", paraments, getClass());
 
 		PageModel page = new PageModel();
 		if(countObjs.size()>0){
@@ -62,7 +60,7 @@ public class GetPage extends BaseService implements MethodExecutor {
 			}
 			page.setCount(count);
 
-			List<Map<String,Object>> list = sql(dbName, "get_data." + getDatabaseType(dbName) + ".sql", paraments, getClass());
+			List<Map<String,Object>> list = sql(dbName, "get_data." + getDatabaseType() + ".sql", paraments, getClass());
 			
 			page.setStart(start);
 			page.setList(list);

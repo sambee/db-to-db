@@ -1,1 +1,1 @@
-select name from sysobjects where type='U' 
+select name as TABLE_NAME from sysobjects where type='U'

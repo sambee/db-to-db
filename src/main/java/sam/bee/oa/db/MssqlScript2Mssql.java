@@ -55,7 +55,7 @@ public class MssqlScript2Mssql implements IDatabaseAdapter{
 		BufferedReader bufReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "GBK"));
 		String line = "";
 		  while ((line = bufReader.readLine()) != null) {  
-			  service.importTable(dbName, line, null);
+//			  service.importTable(dbName, line, null);
 			
 		}
 		

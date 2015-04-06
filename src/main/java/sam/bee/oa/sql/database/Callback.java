@@ -1,7 +1,9 @@
 package sam.bee.oa.sql.database;
 
+import java.util.Map;
+
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public interface Callback {
 
-	boolean execute(Object obj) throws Throwable;
+	boolean execute(Map<String, Object> aData) throws Throwable;
 }

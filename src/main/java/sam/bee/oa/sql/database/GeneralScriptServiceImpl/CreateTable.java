@@ -16,14 +16,14 @@ import sam.bee.oa.sql.freemarker.DefaultSql;
 @SuppressWarnings({ "rawtypes" })
 public class CreateTable extends BaseService implements MethodExecutor {
 
-	String tableName;
+	String expectedOutputType;
 	String outputType;
-	String srcDbName;
-	
+	String tableName;
+
 	List<Map<String, Object>> metas;
 	
-	public CreateTable(String srcDbName, String outputType,String talbeName, List<Map<String, Object>> metas){
-		this.srcDbName = srcDbName;
+	public CreateTable(String expectedOutputType,String talbeName, List<Map<String, Object>> metas){
+		this.expectedOutputType = expectedOutputType;
 		this.outputType = outputType;
 		this.tableName = talbeName;
 		this.metas = metas;
@@ -33,9 +33,9 @@ public class CreateTable extends BaseService implements MethodExecutor {
 	public Object execute(Map params) throws Throwable {		
 		DatabaseService service = (DatabaseService)ServiceFactory.getService("", DatabaseService.class);
 
-		BaseDatabase srcDB = DatabaseFactory.getInstance().getDatabase(srcDbName);
+		BaseDatabase srcDB = DatabaseFactory.getInstance().getDatabase(dbName);
 		Map<String, Object> myParams = new HashMap<String, Object>();
-		List<Map<String, Object>> fields = service.getMetas(srcDbName, tableName);
+		List<Map<String, Object>> fields = service.getMetas(tableName);
 		
 		if("mssql".equals(outputType) && "h2".equals(srcDB.getType())){
 			fields = new H2ToMssqlAdapter().paraseFields(fields);

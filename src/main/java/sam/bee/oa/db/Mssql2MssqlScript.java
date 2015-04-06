@@ -153,15 +153,15 @@ public class Mssql2MssqlScript implements IDatabaseAdapter{
 	private void generalAllCreateTableSript(final boolean willConinueIfError, Callback callback) throws Exception{
 		
 		List<String> tables = getAllTables(SRC_DTATABASE);
-		DatabaseService service = (DatabaseService)ServiceFactory.getService("",DatabaseService.class);
-		for(String tableName : tables){
-			try{
-			service.exportTable(SRC_DTATABASE, "mssql", tableName, "all", true, true, false, callback);
-			}
-			catch(Exception ex){
-				log.error("",ex);
-			}
-		}
+//		DatabaseService service = (DatabaseService)ServiceFactory.getService("",DatabaseService.class);
+//		for(String tableName : tables){
+//			try{
+//			service.exportTable(SRC_DTATABASE, "mssql", tableName, "all", true, true, false, callback);
+//			}
+//			catch(Exception ex){
+//				log.error("",ex);
+//			}
+//		}
 			
 	}
 	
@@ -183,7 +183,7 @@ public class Mssql2MssqlScript implements IDatabaseAdapter{
 				File outFile = new File(table + ".sql");
 				files.add(outFile);
 				OutputStreamWriter wr = new OutputStreamWriter(new FileOutputStream(outFile), "UTF-8");
-				service.exportTable(SRC_DTATABASE, descDBType, (String)table, "all", false, false, copyData, getCallback(wr));
+//				service.exportTable(SRC_DTATABASE, descDBType, (String)table, "all", false, false, copyData, getCallback(wr));
 				wr.close();
 			}
 			
@@ -195,9 +195,9 @@ public class Mssql2MssqlScript implements IDatabaseAdapter{
 		return new Callback() {
 
 					@Override
-					public boolean execute(Object obj) throws Throwable {
-						log.info(obj);
-						String s =String.valueOf(obj).replaceAll("(\r|\n)", "");
+					public boolean execute(Map<String, Object> aData) throws Throwable {
+						log.info(aData);
+						String s =String.valueOf(aData).replaceAll("(\r|\n)", "");
 						out.write(String.valueOf(s) + "\n");
 						return true;
 					}
@@ -209,7 +209,6 @@ public class Mssql2MssqlScript implements IDatabaseAdapter{
 	 * {@link: http://stackoverflow.com/questions/21897286/how-to-extract-files-from-a-7-zip-stream-in-java-without-store-it-on-hard-disk}
 	 * {@link: http://commons.apache.org/proper/commons-compress/examples.html}
 	 * @param sourceFiles
-	 * @param outFileName
 	 * @return
 	 * @throws IOException
 	 */

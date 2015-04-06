@@ -14,14 +14,14 @@ public class GetAllTables extends BaseService implements MethodExecutor{
 		if(StringUtils.isEmpty(dbName)){
 			throw new ValidateException("database is empty or null.");
 		}
-		if(StringUtils.isEmpty(getDatabaseType(dbName))){
+		if(StringUtils.isEmpty(getDatabaseType())){
 			throw new ValidateException("database type is empty or null.");
 		}
 	}
 	@Override
 	public Object execute(Map params) throws Throwable {
 		validate();
-		return sql(dbName, "get_all_tables." + getDatabaseType(dbName) +".sql", params, getClass());
+		return sql(dbName, "get_all_tables." + getDatabaseType() +".sql", params, getClass());
 	}
 
 	

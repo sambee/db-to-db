@@ -91,34 +91,34 @@ public class ImportTableTest {
 		 }
 		 
 		
-		Callback callback = new Callback() {
-			@Override
-			public boolean execute(Object obj) throws Exception {
-				return true;
-			}
-
-		};
-
-		BufferedReader file = null;
-		
-		DatabaseService service = (DatabaseService) ServiceFactory
-				.getService("",DatabaseService.class);
-		
-		for (Object table : p.keySet()) {
-			System.out.println("Import " + table);
-			if (!String.valueOf(table).startsWith("deploy.")) {
-
-				String sqlFile = deployPath + "/" + descConn.getType() +"/" + date+ "/" +dbName +  "_" + descConn.getType()  + "_" + table + "@" + date + ".sql";
-				file = new BufferedReader(new FileReader(new File(sqlFile)));
-				String sql;
-				while ((sql = file.readLine()) != null) {
-					service.importTable(descConn.getDBName(), sql, callback);
-				}
-
-			}
-			if(file!=null)
-				file.close();
-		}
+//		Callback callback = new Callback() {
+//			@Override
+//			public boolean execute(Object obj) throws Exception {
+//				return true;
+//			}
+//
+//		};
+//
+//		BufferedReader file = null;
+//
+//		DatabaseService service = (DatabaseService) ServiceFactory
+//				.getService("",DatabaseService.class);
+//
+//		for (Object table : p.keySet()) {
+//			System.out.println("Import " + table);
+//			if (!String.valueOf(table).startsWith("deploy.")) {
+//
+//				String sqlFile = deployPath + "/" + descConn.getType() +"/" + date+ "/" +dbName +  "_" + descConn.getType()  + "_" + table + "@" + date + ".sql";
+//				file = new BufferedReader(new FileReader(new File(sqlFile)));
+//				String sql;
+//				while ((sql = file.readLine()) != null) {
+//					service.importTable(descConn.getDBName(), sql, callback);
+//				}
+//
+//			}
+//			if(file!=null)
+//				file.close();
+//		}
 
 	}
 }
