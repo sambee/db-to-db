@@ -5,8 +5,8 @@
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -21,7 +21,6 @@
     <orderEntry type="library" name="Maven: cglib:cglib:3.0" level="project" />
     <orderEntry type="library" name="Maven: org.ow2.asm:asm:4.0" level="project" />
     <orderEntry type="library" name="Maven: org.ow2.asm:asm-all:4.0" level="project" />
-    <orderEntry type="library" name="Maven: com.microsoft.sqlserver:sqljdbc4:4.0" level="project" />
     <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-all:1.3" level="project" />
     <orderEntry type="library" name="Maven: org.apache.ant:ant:1.9.3" level="project" />
     <orderEntry type="library" name="Maven: org.apache.ant:ant-launcher:1.9.3" level="project" />
@@ -31,6 +30,5 @@
     <orderEntry type="library" name="Maven: org.hsqldb:hsqldb:2.3.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-compress:1.8" level="project" />
     <orderEntry type="library" name="Maven: org.tukaani:xz:1.5" level="project" />
-    <orderEntry type="library" name="Maven: net.ucanaccess:ucanaccess:2.0.4" level="project" />
   </component>
 </module>

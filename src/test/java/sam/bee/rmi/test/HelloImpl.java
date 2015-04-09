@@ -31,6 +31,6 @@ public class HelloImpl extends UnicastRemoteObject implements IHello {
      * @throws java.rmi.RemoteException
      */
     public String sayHelloToSomeBody(String someBodyName) throws RemoteException {
-        return "你好，" + someBodyName + "!";
+        return  someBodyName ;
     }
 }

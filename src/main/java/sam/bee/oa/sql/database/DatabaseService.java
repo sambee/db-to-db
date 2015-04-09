@@ -93,4 +93,6 @@ public interface DatabaseService {
 	 * @return
 	 */
 	String getDatabaseType();
+
+	void getAllData(String tableName, Callback callback);
 }

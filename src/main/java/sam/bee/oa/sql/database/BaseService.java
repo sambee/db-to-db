@@ -15,7 +15,7 @@ import sam.bee.oa.sql.utils.JdbcConverter;
 
 
 
-public abstract class BaseService {
+public abstract class BaseService<T> {
 
 	protected final static Logger log = Logger.getLogger(BaseService.class);
     protected String dbName;

@@ -11,10 +11,8 @@ import sam.bee.oa.sql.database.DatabaseService;
 import sambee.utils.ConfigUtils;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
@@ -26,8 +24,10 @@ public class App {
 
     private static final Log log = LogFactory.getLog(App.class);
     private static final String FILE_CONFIG_NAME = "jdbc.properties";
+    private static final String INI_FILE_CONFIG_NAME = "jdbc.ini";
     public static void main(String[] args) throws Exception {
         final MainForm form =  new MainForm();
+
         form.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         form.setSize(800, 600);
         form.onStart();
@@ -87,39 +87,62 @@ public class App {
     }
 
 
-    public static void loadSettings(MainForm form){
+    public static void loadSettings(final MainForm form){
 
-        try {
-            Map<String,String> map = ConfigUtils.loadConfig(FILE_CONFIG_NAME, "src");
-
-            String driver = value(map.get("driver"), "");
-            String jdbc = value(map.get("jdbc"), "");
-            String user =  value(map.get("user"), "");
-            String password =  value(map.get("password"), "");
-
-            map = ConfigUtils.loadConfig("jdbc.properties", "desc");
-            String descDriver =  value(map.get("driver"), "");
-            String descJdbc =  value(map.get("jdbc"), "");
-            String descUser =  value(map.get("user"), "");
-            String descPassword = value(map.get("password"), "");
-
-            form.getSrcDriver().setText(driver);
-            form.getSrcJDBC().setText(jdbc);
-            form.getSrcUser().setText(user);
-            form.getSrcPassword().setText(password);
-
-
-            form.getDescDriver().setText(descDriver);
-           form.getDescJDBC().setText(descJdbc);
-            form.getDescUser().setText(descUser);
-             form.getDescPassword().setText(descPassword);
-        } catch (IOException e) {
-            e.printStackTrace();
+//        try {
+        final File jdbcFile = new File(INI_FILE_CONFIG_NAME);
+        List<String> sections = IniReader.getSectionNames(jdbcFile);
+        for(String s : sections){
+            form.getComboSrc().addItem(s);
+            form.getComboDesc().addItem(s);
         }
 
+        form.getComboSrc().addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange()==ItemEvent.SELECTED){
+                    //            Map<String,String> map = ConfigUtils.loadConfig(FILE_CONFIG_NAME, "src");
+                    String domain = (String)form.getComboSrc().getSelectedItem();
+                    Map<String,String> map =IniReader.getItemsBySectionName(domain,jdbcFile);
+                    String driver = value(map.get("driver"), "");
+                    String jdbc = value(map.get("jdbc"), "");
+                    String user =  value(map.get("user"), "");
+                    String password =  value(map.get("password"), "");
+
+                    form.getSrcDriver().setText(driver);
+                    form.getSrcJDBC().setText(jdbc);
+                    form.getSrcUser().setText(user);
+                    form.getSrcPassword().setText(password);
+                }
+
+            }
+        });
 
 
+         form.getComboDesc().addItemListener(new ItemListener() {
+             @Override
+             public void itemStateChanged(ItemEvent e) {
+                 if (e.getStateChange() == ItemEvent.SELECTED) {
+                     String domain = (String) form.getComboDesc().getSelectedItem();
+                     Map<String, String> map = IniReader.getItemsBySectionName(domain, jdbcFile);
+                     String driver = value(map.get("driver"), "");
+                     String jdbc = value(map.get("jdbc"), "");
+                     String user = value(map.get("user"), "");
+                     String password = value(map.get("password"), "");
+
+                     form.getDescDriver().setText(driver);
+                     form.getDescJDBC().setText(jdbc);
+                     form.getDescUser().setText(user);
+                     form.getDescPassword().setText(password);
+                 }
+             }
+         });
+
+        form.getComboSrc().setSelectedIndex(form.getComboSrc().getItemCount()-1);
+        form.getComboDesc().setSelectedIndex(form.getComboDesc().getItemCount()-1);
     }
+
+
 
     public static void saveConfig(final MainForm form){
 
@@ -199,85 +222,104 @@ public class App {
     }
 
     private static String mTableName;
-    public static void execute(MainForm form){
-        final String driver = form.getSrcDriver().getText();
-        final String jdbc = form.getSrcJDBC().getText();
-        final String user = form.getSrcUser().getText();
-        final  String password = form.getSrcPassword().getText();
+    public static void execute(final MainForm form){
 
 
-        final String descDriver = form.getDescDriver().getText();
-        final  String descJdbc = form.getDescJDBC().getText();
-        final String descUser = form.getDescUser().getText();
-        final String descPassword = form.getDescPassword().getText();
+       final class UpdateFormStatus implements Runnable{
 
-        Map<String, String> map = new HashMap<String, String>(){{
-            put("driver", driver);
-            put("jdbc",jdbc);
-            put("user",user);
-            put("password", password);
-
-        }};
-
-        Map<String, String> desc = new HashMap<String, String>(){{
-            put("driver", descDriver);
-            put("jdbc",descJdbc);
-            put("user",descUser);
-            put("password", descPassword);
-
-        }};
-
-        //copy data to the target database.
-        try {
-            DatabaseFactory.getInstance().registerDatabase("src", map);
-            DatabaseFactory.getInstance().registerDatabase("desc", desc);
-
-            DatabaseService srcService = ServiceFactory.getService("src", DatabaseService.class);
-            final DatabaseService descService = ServiceFactory.getService("desc", DatabaseService.class);
-            TableModel table =(TableModel) form.getTable().getModel();
-            List<DataModel> tableInfo = table.getData();
-            DataModel dataModel;
-            for(int i=0;i<tableInfo.size();i++){
-
-                dataModel = tableInfo.get(i);
-                if(dataModel.isCreateTable()){
-                    //table name;
-                    log.info("Create SQL:" + dataModel.getTableName());
-                    String dropSQL = srcService.dropTableSql(descService.getDatabaseType(), dataModel.getTableName());
-                    descService.executeSQL(dropSQL);
-                    String createSQL = srcService.createTableSql(descService.getDatabaseType(), dataModel.getTableName());
-
-                    descService.executeSQL(createSQL);
-
-                    descService.getData(dataModel.getTableName(), new Callback() {
-                        @Override
-                        public boolean execute(Map<String, Object> aData) throws Throwable {
-                            return false;
-                        }
-                    });
-
-                }
-                if(dataModel.isExportData()){
-                    log.info("Copy Data:" + dataModel.getTableName());
-                    mTableName = dataModel.getTableName();
-                    srcService.getData(dataModel.getTableName(), new Callback() {
-                        @Override
-                        public boolean execute(Map<String, Object> aData) throws Throwable {
-                            aData.remove("RN");
-                            descService.saveData(mTableName, aData);
-                            return true;
-                        }
-                    });
-                }
-
+           int row = 0;
+            public UpdateFormStatus(int row){
+                this.row =row;
             }
 
-            log.info("==================  DONE ==================");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            @Override
+            public void run() {
+                ((TableModel) form.getTable().getModel()).getModelAt(row).setStatus(true);
+                ((TableModel) form.getTable().getModel()).fireTableRowsUpdated(row,row);
+            }
         }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String driver = form.getSrcDriver().getText();
+                final String jdbc = form.getSrcJDBC().getText();
+                final String user = form.getSrcUser().getText();
+                final  String password = form.getSrcPassword().getText();
+
+
+                final String descDriver = form.getDescDriver().getText();
+                final  String descJdbc = form.getDescJDBC().getText();
+                final String descUser = form.getDescUser().getText();
+                final String descPassword = form.getDescPassword().getText();
+
+                Map<String, String> map = new HashMap<String, String>(){{
+                    put("driver", driver);
+                    put("jdbc",jdbc);
+                    put("user",user);
+                    put("password", password);
+
+                }};
+
+                Map<String, String> desc = new HashMap<String, String>(){{
+                    put("driver", descDriver);
+                    put("jdbc",descJdbc);
+                    put("user",descUser);
+                    put("password", descPassword);
+
+                }};
+
+                //copy data to the target database.
+                try {
+                    DatabaseFactory.getInstance().registerDatabase("src", map);
+                    DatabaseFactory.getInstance().registerDatabase("desc", desc);
+
+                    DatabaseService srcService = ServiceFactory.getService("src", DatabaseService.class);
+                    final DatabaseService descService = ServiceFactory.getService("desc", DatabaseService.class);
+                    TableModel table =(TableModel) form.getTable().getModel();
+                    List<DataModel> tableInfo = table.getData();
+                    DataModel dataModel;
+                    form.clearStatus();
+                    for(int i=0;i<tableInfo.size();i++){
+
+                        dataModel = tableInfo.get(i);
+                        if(dataModel.isCreateTable()){
+                            //table name;
+                            log.info("Create SQL:" + dataModel.getTableName());
+                            String dropSQL = srcService.dropTableSql(descService.getDatabaseType(), dataModel.getTableName());
+                            descService.executeSQL(dropSQL);
+                            String createSQL = srcService.createTableSql(descService.getDatabaseType(), dataModel.getTableName());
+                            descService.executeSQL(createSQL);
+
+                        }
+                        if(dataModel.isExportData()){
+                            log.info("Copy Data:" + dataModel.getTableName());
+                            mTableName = dataModel.getTableName();
+                            srcService.getAllData(dataModel.getTableName(), new Callback() {
+                                @Override
+                                public boolean execute(Map<String, Object> aData) throws Throwable {
+                                    aData.remove("RN");
+                                    descService.saveData(mTableName, aData);
+                                    return true;
+                                }
+                            });
+
+                        }
+//                        new UpdateFormStatus(i);
+                        ((TableModel) form.getTable().getModel()).getModelAt(i).setStatus(true);
+                        ((TableModel) form.getTable().getModel()).fireTableRowsUpdated(i,i);
+
+                    }
+
+                    log.info("==================  DONE ==================");
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
     }
 
     public static String value(String v, String v2){

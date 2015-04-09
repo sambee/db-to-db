@@ -4,6 +4,7 @@ import sam.bee.oa.sql.core.MethodExecutor;
 import sam.bee.oa.sql.database.BaseService;
 import sam.bee.oa.sql.database.model.PageModel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,8 +63,16 @@ public class GetPage extends BaseService implements MethodExecutor {
 				paraments.put("pageSize", pageSize);
 			}
 			page.setCount(count);
+			log.info("Data Count " + count);
 
-			List<Map<String,Object>> list = sql(dbName, "get_data." + getDatabaseType() + ".sql", paraments, getClass());
+			List<Map<String,Object>>  list;
+			if(count>0){
+				list = sql(dbName, "get_data." + getDatabaseType() + ".sql", paraments, getClass());
+			}
+			else{
+				list =  new ArrayList<Map<String, Object>>();
+			}
+
 			
 			page.setStart(start);
 			page.setList(list);

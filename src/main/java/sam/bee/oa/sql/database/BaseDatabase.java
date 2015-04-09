@@ -79,9 +79,15 @@ public class BaseDatabase {
 					oracle.sql.TIMESTAMP obj2= (oracle.sql.TIMESTAMP)obj;
 					stmt.setTimestamp(i, obj2.timestampValue());
 				}
+				else if(obj instanceof org.h2.jdbc.JdbcClob){
+					stmt.setClob(i, (org.h2.jdbc.JdbcClob)obj);
+				}
+				else if(obj instanceof org.h2.jdbc.JdbcBlob){
+					stmt.setBlob(i, (org.h2.jdbc.JdbcBlob) obj);
+				}
 
 				else {
-					throw new RuntimeException("Unknown type" + obj );
+					throw new RuntimeException("Unknown type： " + obj.getClass() );
 				}
 			}
 
