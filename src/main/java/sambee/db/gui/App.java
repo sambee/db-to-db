@@ -23,7 +23,6 @@ import java.util.*;
 public class App {
 
     private static final Log log = LogFactory.getLog(App.class);
-    private static final String FILE_CONFIG_NAME = "jdbc.properties";
     private static final String INI_FILE_CONFIG_NAME = "jdbc.ini";
     public static void main(String[] args) throws Exception {
         final MainForm form =  new MainForm();
@@ -158,11 +157,11 @@ public class App {
             put("desc.password", form.getDescPassword().getText());
 
         }};
-        try {
-            ConfigUtils.saveConfig(FILE_CONFIG_NAME, map);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            ConfigUtils.saveConfig(FILE_CONFIG_NAME, map);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public static void  loadDatabaseInfo(MainForm form){
@@ -288,7 +287,9 @@ public class App {
                             log.info("Create SQL:" + dataModel.getTableName());
                             String dropSQL = srcService.dropTableSql(descService.getDatabaseType(), dataModel.getTableName());
                             descService.executeSQL(dropSQL);
-                            String createSQL = srcService.createTableSql(descService.getDatabaseType(), dataModel.getTableName());
+
+                             String createSQL = srcService.createTableSql(descService.getDatabaseType(), dataModel.getTableName());
+
                             descService.executeSQL(createSQL);
 
                         }

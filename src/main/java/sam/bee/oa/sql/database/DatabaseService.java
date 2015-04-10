@@ -65,7 +65,7 @@ public interface DatabaseService {
 	 * @param tableName
 	 * @return
 	 */
-	String createTableSql(String expectType, String tableName);
+	String createTableSql(String expectType, String tableName) throws SQLException;
 
 	/**
 	 *

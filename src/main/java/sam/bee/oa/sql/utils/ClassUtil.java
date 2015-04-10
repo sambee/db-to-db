@@ -12,7 +12,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class ClassUtil {
-    // 获取指定包名下的所有类
+    //获取指定包名下的所有类
+
     public static List<Class<?>> getClassList(String packageName, boolean isRecursive) {
         List<Class<?>> classList = new ArrayList<Class<?>>();
         try {

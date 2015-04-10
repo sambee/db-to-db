@@ -15,7 +15,7 @@ public class BaseDatabase {
 	private static Logger log = Logger.getLogger(BaseDatabase.class);
 	private DatabaseConfig config = null;
 
-	Connection connection;
+	private Connection connection;
 	public BaseDatabase(DatabaseConfig config) throws SQLException, ClassNotFoundException{
 		this.config = config;
 	}
@@ -85,7 +85,9 @@ public class BaseDatabase {
 				else if(obj instanceof org.h2.jdbc.JdbcBlob){
 					stmt.setBlob(i, (org.h2.jdbc.JdbcBlob) obj);
 				}
-
+				else if(obj instanceof  java.util.Date){
+					stmt.setDate(i, new java.sql.Date(((java.util.Date)obj).getTime()));
+				}
 				else {
 					throw new RuntimeException("Unknown type： " + obj.getClass() );
 				}
@@ -105,13 +107,22 @@ public class BaseDatabase {
 //	}
 
 	public List<Map<String,Objects>> getMetas(String tableName, String sql) throws SQLException, ClassNotFoundException, IOException {
+
 		DatabaseMetaData dm = getConnection().getMetaData();
 		List<String> primaryKeys = getAllPrimaryKeys(dm, null, tableName);
 		Statement stmt = getConnection().createStatement();
-		ResultSet resultSet  =  stmt.executeQuery(sql);
-
-		List<Map<String,Objects>> list = getMetaList(resultSet, primaryKeys, tableName);
-		resultSet.close();
+		List<Map<String, Objects>> list;
+		try {
+			ResultSet resultSet = stmt.executeQuery(sql);
+			list  = getMetaList(resultSet, primaryKeys, tableName);
+			resultSet.close();
+		}
+		finally {
+			if(stmt!=null) {
+				stmt.close();
+			}
+			reconnect();
+		}
 		return list;
 	}
 
@@ -152,12 +163,17 @@ public class BaseDatabase {
 				}
 			}
 
+			if(rs2!=null){
+				rs2.close();
+			}
 			if(primaryKeys.contains(colName)){
 				meta.put("COL_PRIMARY", true);
 			}
 			list.add(meta);
+
 		}
 
+		rs.close();
 //DatabaseMetaData dm = getDB(dbName).getConn().getMetaData( );
 //		getDataBaseInformations(dm);
 //		out.println("--------------------------------");
@@ -464,11 +480,11 @@ public class BaseDatabase {
 	}
 
 	public Connection reconnect() throws ClassNotFoundException, SQLException {
-		if(connection!=null){
+		if(connection!=null) {
 			connection.close();
-			Class.forName(config.getDriverClass());
-			connection = DriverManager.getConnection(config.getJDBC(), config.getUserName(), config.getPassword());
 		}
+		Class.forName(config.getDriverClass());
+		connection = DriverManager.getConnection(config.getJDBC(), config.getUserName(), config.getPassword());
 		return connection;
 	}
 }
