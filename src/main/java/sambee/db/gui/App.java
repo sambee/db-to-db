@@ -2,13 +2,11 @@ package sambee.db.gui;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.spi.LoggerFactory;
 import sam.bee.oa.sql.core.ServiceFactory;
 import sam.bee.oa.sql.database.BaseDatabase;
 import sam.bee.oa.sql.database.Callback;
 import sam.bee.oa.sql.database.DatabaseFactory;
 import sam.bee.oa.sql.database.DatabaseService;
-import sambee.utils.ConfigUtils;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -311,12 +309,16 @@ public class App {
                         ((TableModel) form.getTable().getModel()).fireTableRowsUpdated(i,i);
 
                     }
-
                     log.info("==================  DONE ==================");
                 } catch (SQLException e) {
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
+
+                }
+                finally {
+                    DatabaseFactory.getInstance().removeDatabase("src");
+                    DatabaseFactory.getInstance().removeDatabase("desc");
                 }
             }
         }).start();

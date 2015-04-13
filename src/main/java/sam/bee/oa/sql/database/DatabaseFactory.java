@@ -28,6 +28,7 @@ public class DatabaseFactory {
 	public static DatabaseFactory getInstance(){
 		return factory;
 	}
+
 	
 	public BaseDatabase getDatabase(String dbName) throws SQLException,
 			IOException {
@@ -50,9 +51,20 @@ public class DatabaseFactory {
 	}
 
     public void registerDatabase(String dbName, Map config ) throws SQLException, ClassNotFoundException {
+		removeDatabase(dbName);
         getDBS().put(dbName, new BaseDatabase(new DatabaseConfig(dbName, config)));
 
     }
+
+	public void removeDatabase(String dbName){
+		BaseDatabase db  = getDBS().get(dbName);
+		try {
+			if(db!=null && db.getConnection()!=null) {
+				db.getConnection().close();
+			}
+		} catch (SQLException e) {
+		} catch (ClassNotFoundException e) {}
+	}
 
 	private Map<String, BaseDatabase> getDBS(){
 		if (dbs == null) {
